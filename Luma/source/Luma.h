@@ -7,6 +7,7 @@
 #include "Luma/Core/Log.h"
 
 #include "Luma/Graphics/Camera.h"
+#include "Luma/Graphics/Material.h"
 #include "Luma/Graphics/Mesh.h"
 #include "Luma/Graphics/RenderCommand.h"
 #include "Luma/Graphics/Renderer.h"

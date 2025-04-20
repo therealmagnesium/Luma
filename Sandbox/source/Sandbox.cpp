@@ -34,7 +34,11 @@ void Sandbox_OnCreate()
     state.camera.lookSensitivity = 3.f;
     SetPrimaryCamera(state.camera);
 
+    state.texture = LoadTexture("assets/textures/small_checker.png");
     state.mesh = CreateMesh(vertices, LEN(vertices), indices, LEN(indices));
+
+    state.material = LoadMaterialDefault();
+    state.material.albedoTexture = &state.texture;
 }
 
 void Sandbox_OnUpdate()
@@ -47,7 +51,7 @@ void Sandbox_OnUpdate()
 
 void Sandbox_OnRender()
 {
-    DrawMesh(state.mesh, transform);
+    DrawMesh(state.mesh, transform, state.material);
 }
 
 void Sandbox_OnRenderUI()
@@ -56,4 +60,5 @@ void Sandbox_OnRenderUI()
 
 void Sandbox_OnShutdown()
 {
+    DestroyMesh(state.mesh);
 }

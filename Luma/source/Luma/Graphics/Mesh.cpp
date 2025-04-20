@@ -41,18 +41,25 @@ namespace Luma
             DestroyBuffer(mesh.indexBuffer);
         }
 
-        void DrawMesh(Mesh& mesh, const glm::mat4& transform)
+        void DrawMesh(Mesh& mesh, const glm::mat4& transform, Material& material)
         {
-            Shader& defaultShader = GetDefaultShader();
-            SetShaderUniform(defaultShader, "modelMatrix", (void*)&transform, SHADER_UNIFORM_MAT4);
+            if (material.shader != NULL)
+            {
+                SetShaderUniform(*material.shader, "modelMatrix", (void*)&transform, SHADER_UNIFORM_MAT4);
+                SetShaderUniform(*material.shader, "material.albedo", &material.albedo, SHADER_UNIFORM_VEC3);
+                SetShaderUniform(*material.shader, "material.albedoTexture", 0, SHADER_UNIFORM_INT);
 
-            BindVertexArray(mesh.vertexArray);
-            BindIndexBuffer(mesh.indexBuffer);
+                if (material.albedoTexture != NULL)
+                    BindTexture(*material.albedoTexture, 0);
 
-            RenderCommand::DrawIndexed(6);
+                BindVertexArray(mesh.vertexArray);
+                BindIndexBuffer(mesh.indexBuffer);
 
-            UnbindIndexBuffer();
-            UnbindVertexArray();
+                RenderCommand::DrawIndexed(6);
+
+                UnbindIndexBuffer();
+                UnbindVertexArray();
+            }
         }
     }
 }

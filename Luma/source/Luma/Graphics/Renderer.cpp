@@ -29,6 +29,8 @@ namespace Luma
             CreateShaderUniform(state.defaultShader, "modelMatrix");
             CreateShaderUniform(state.defaultShader, "viewMatrix");
             CreateShaderUniform(state.defaultShader, "projectionMatrix");
+            CreateShaderUniform(state.defaultShader, "material.albedo");
+            CreateShaderUniform(state.defaultShader, "material.albedoTexture");
 
             INFO("The renderer was initialized successfully");
         }

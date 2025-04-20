@@ -9,6 +9,8 @@ struct SandboxState
 {
     Camera camera;
     Mesh mesh;
+    Material material;
+    Texture texture;
 };
 
 void Sandbox_OnCreate();
