@@ -44,7 +44,7 @@ void Sandbox_OnUpdate()
 void Sandbox_OnRender()
 {
     DrawMesh(state.cubeMesh, glm::scale(glm::mat4(1.f), glm::vec3(5.f, 0.2f, 5.f)), state.materials[0]);
-    DrawMesh(state.quadMesh, glm::translate(glm::mat4(1.f), glm::vec3(0.f, 1.f, 0.f)), state.materials[1]);
+    DrawMesh(state.cubeMesh, glm::translate(glm::mat4(1.f), glm::vec3(0.f, 2.f, 0.f)), state.materials[1]);
 }
 
 void Sandbox_OnRenderUI()

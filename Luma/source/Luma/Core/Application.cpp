@@ -56,8 +56,8 @@ namespace Luma
                 Graphics::RendererEnd();
             }
 
-            Graphics::RendererShutdown();
             state.handle->OnShutdown();
+            Graphics::RendererShutdown();
         }
 
         void QuitApplication()

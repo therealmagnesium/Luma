@@ -55,7 +55,7 @@ namespace Luma
 
             stbi_image_free(data);
 
-            INFO("Texture \"%s\" loaded successfully with id %d", path, texture.id);
+            INFO("Texture \"%s\" loaded successfully with an ID of %d", path, texture.id);
             return texture;
         }
 

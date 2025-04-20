@@ -2,6 +2,7 @@
 out vec4 finalColor;
 
 in vec2 fragTexCoord;
+in vec3 fragNormal;
 
 struct Material
 {
@@ -24,6 +25,7 @@ vec3 GetObjectColor()
 
 void main()
 {
-    //finalColor = vec4(fragTexCoord, 0.9f, 1.f);
     finalColor = vec4(GetObjectColor(), 1.f);
+    //finalColor = vec4(fragTexCoord, 0.9f, 1.f);
+    //finalColor = vec4(abs(normalize(fragNormal)), 1.f);
 }

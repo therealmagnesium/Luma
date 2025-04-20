@@ -2,6 +2,8 @@
 #include "Luma/Graphics/RenderCommand.h"
 #include "Luma/Graphics/Shader.h"
 
+#include "Luma/Core/Log.h"
+
 namespace Luma
 {
     namespace Graphics
@@ -20,16 +22,17 @@ namespace Luma
 
             SubmitMesh(mesh);
 
+            INFO("Mesh created successfully with an ID of %d", mesh.vertexArray);
             return mesh;
         }
 
         Mesh GenMeshQuad()
         {
             Vertex vertices[] = {
-                (Vertex){glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec2(0.f, 0.f)}, // bottom left
-                (Vertex){glm::vec3(0.5f, -0.5f, 0.0f), glm::vec2(1.f, 0.f)},  // bottom right
-                (Vertex){glm::vec3(0.5f, 0.5f, 0.0f), glm::vec2(1.f, 1.f)},   // top right
-                (Vertex){glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec2(0.f, 1.f)}   // top left
+                (Vertex){glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec2(0.f, 0.f), glm::vec3(0.f, 0.f, 1.f)}, // bottom left
+                (Vertex){glm::vec3(0.5f, -0.5f, 0.0f), glm::vec2(1.f, 0.f), glm::vec3(0.f, 0.f, 1.f)},  // bottom right
+                (Vertex){glm::vec3(0.5f, 0.5f, 0.0f), glm::vec2(1.f, 1.f), glm::vec3(0.f, 0.f, 1.f)},   // top right
+                (Vertex){glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec2(0.f, 1.f), glm::vec3(0.f, 0.f, 1.f)}   // top left
             };
 
             u32 indices[] = {
@@ -44,32 +47,32 @@ namespace Luma
         Mesh GenMeshCube()
         {
             Vertex vertices[] = {
-                (Vertex){glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f)}, // A 0
-                (Vertex){glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 0.0f)},  // B 1
-                (Vertex){glm::vec3(0.5f, 0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},   // C 2
-                (Vertex){glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},  // D 3
-                (Vertex){glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec2(0.0f, 0.0f)},  // E 4
-                (Vertex){glm::vec3(0.5f, -0.5f, 0.5f), glm::vec2(1.0f, 0.0f)},   // F 5
-                (Vertex){glm::vec3(0.5f, 0.5f, 0.5f), glm::vec2(1.0f, 1.0f)},    // G 6
-                (Vertex){glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec2(0.0f, 1.0f)},   // H 7
+                (Vertex){glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f), glm::vec3(0.f, 0.f, -1.f)}, // A 0
+                (Vertex){glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(0.f, 0.f, -1.f)},  // B 1
+                (Vertex){glm::vec3(0.5f, 0.5f, -0.5f), glm::vec2(1.0f, 1.0f), glm::vec3(0.f, 0.f, -1.f)},   // C 2
+                (Vertex){glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(0.f, 0.f, -1.f)},  // D 3
+                (Vertex){glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec2(0.0f, 0.0f), glm::vec3(0.f, 0.f, 1.f)},   // E 4
+                (Vertex){glm::vec3(0.5f, -0.5f, 0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(0.f, 0.f, 1.f)},    // F 5
+                (Vertex){glm::vec3(0.5f, 0.5f, 0.5f), glm::vec2(1.0f, 1.0f), glm::vec3(0.f, 0.f, 1.f)},     // G 6
+                (Vertex){glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(0.f, 0.f, 1.f)},    // H 7
 
-                (Vertex){glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec2(0.0f, 0.0f)},  // D 8
-                (Vertex){glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 0.0f)}, // A 9
-                (Vertex){glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec2(1.0f, 1.0f)},  // E 10
-                (Vertex){glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec2(0.0f, 1.0f)},   // H 11
-                (Vertex){glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f)},  // B 12
-                (Vertex){glm::vec3(0.5f, 0.5f, -0.5f), glm::vec2(1.0f, 0.0f)},   // C 13
-                (Vertex){glm::vec3(0.5f, 0.5f, 0.5f), glm::vec2(1.0f, 1.0f)},    // G 14
-                (Vertex){glm::vec3(0.5f, -0.5f, 0.5f), glm::vec2(0.0f, 1.0f)},   // F 15
+                (Vertex){glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec2(0.0f, 0.0f), glm::vec3(1.f, 0.f, 0.f)},  // D 8
+                (Vertex){glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(1.f, 0.f, 0.f)}, // A 9
+                (Vertex){glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec2(1.0f, 1.0f), glm::vec3(1.f, 0.f, 0.f)},  // E 10
+                (Vertex){glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(1.f, 0.f, 0.f)},   // H 11
+                (Vertex){glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f), glm::vec3(-1.f, 0.f, 0.f)}, // B 12
+                (Vertex){glm::vec3(0.5f, 0.5f, -0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(-1.f, 0.f, 0.f)},  // C 13
+                (Vertex){glm::vec3(0.5f, 0.5f, 0.5f), glm::vec2(1.0f, 1.0f), glm::vec3(-1.f, 0.f, 0.f)},   // G 14
+                (Vertex){glm::vec3(0.5f, -0.5f, 0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(-1.f, 0.f, 0.f)},  // F 15
 
-                (Vertex){glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f)}, // A 16
-                (Vertex){glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 0.0f)},  // B 17
-                (Vertex){glm::vec3(0.5f, -0.5f, 0.5f), glm::vec2(1.0f, 1.0f)},   // F 18
-                (Vertex){glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec2(0.0f, 1.0f)},  // E 19
-                (Vertex){glm::vec3(0.5f, 0.5f, -0.5f), glm::vec2(0.0f, 0.0f)},   // C 20
-                (Vertex){glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec2(1.0f, 0.0f)},  // D 21
-                (Vertex){glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec2(1.0f, 1.0f)},   // H 22
-                (Vertex){glm::vec3(0.5f, 0.5f, 0.5f), glm::vec2(0.0f, 1.0f)},    // G 23
+                (Vertex){glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f), glm::vec3(0.f, -1.f, 0.f)}, // A 16
+                (Vertex){glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(0.f, -1.f, 0.f)},  // B 17
+                (Vertex){glm::vec3(0.5f, -0.5f, 0.5f), glm::vec2(1.0f, 1.0f), glm::vec3(0.f, -1.f, 0.f)},   // F 18
+                (Vertex){glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(0.f, -1.f, 0.f)},  // E 19
+                (Vertex){glm::vec3(0.5f, 0.5f, -0.5f), glm::vec2(0.0f, 0.0f), glm::vec3(0.f, 1.f, 0.f)},    // C 20
+                (Vertex){glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(0.f, 1.f, 0.f)},   // D 21
+                (Vertex){glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec2(1.0f, 1.0f), glm::vec3(0.f, 1.f, 0.f)},    // H 22
+                (Vertex){glm::vec3(0.5f, 0.5f, 0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(0.f, 1.f, 0.f)},     // G 23
             };
 
             u32 indices[] = {0,  3,  2,  2,  1,  0,  4,  5,  6,  6,  7,  4,   // front and back
@@ -82,6 +85,8 @@ namespace Luma
 
         void DestroyMesh(Mesh& mesh)
         {
+            INFO("Destorying mesh with ID %d", mesh.vertexArray);
+
             DestroyVertexArray(mesh.vertexArray);
             DestroyBuffer(mesh.vertexBuffer);
             DestroyBuffer(mesh.indexBuffer);
@@ -124,6 +129,7 @@ namespace Luma
 
             SetVertexArrayAttribute(0, 3, offsetof(Vertex, position));
             SetVertexArrayAttribute(1, 2, offsetof(Vertex, texCoord));
+            SetVertexArrayAttribute(2, 3, offsetof(Vertex, normal));
 
             UnbindVertexArray();
             UnbindVertexBuffer();

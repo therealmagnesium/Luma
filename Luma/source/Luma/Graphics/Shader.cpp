@@ -64,16 +64,15 @@ namespace Luma
                 return (Shader){};
             }
 
-            INFO("Shader [%s, %s] loaded successfully with id %d", vertexPath, fragmentPath, shader.id);
+            INFO("Shader [%s, %s] loaded successfully with an ID of %d", vertexPath, fragmentPath, shader.id);
             return shader;
         }
 
         void UnloadShader(Shader& shader)
         {
-            INFO("Unloading shader [%s, %s]...",     //
-                 shader.source.vertexPath.c_str(),   //
-                 shader.source.fragmentPath.c_str(), //
-                 shader.id);
+            INFO("Unloading shader [%s, %s]...",   //
+                 shader.source.vertexPath.c_str(), //
+                 shader.source.fragmentPath.c_str());
 
             UnbindShader();
             glDeleteProgram(shader.id);

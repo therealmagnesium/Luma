@@ -2,6 +2,7 @@
 
 #include "Luma/Core/Application.h"
 #include "Luma/Core/Input.h"
+#include "Luma/Core/Log.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -13,12 +14,12 @@ namespace Luma
 
         glm::vec3 Camera::GetViewDirection()
         {
-            return glm::normalize(-glm::transpose(view)[2]);
+            return glm::normalize(target - position);
         }
 
         glm::vec3 Camera::GetRightVector()
         {
-            return glm::normalize(glm::transpose(view)[0]);
+            return glm::normalize(glm::cross(GetViewDirection(), up));
         }
 
         void UpdateCamera(Camera& camera, CameraType type)
@@ -63,19 +64,23 @@ namespace Luma
                 angle.x = Core::GetMouseRelative().x * deltaAngle.x * camera.lookSensitivity;
                 angle.y = Core::GetMouseRelative().y * deltaAngle.y * camera.lookSensitivity;
 
-                float cosAngle = glm::dot(camera.GetViewDirection(), camera.up);
-                if (cosAngle * glm::sign(deltaAngle.y) > 0.99f)
-                    deltaAngle.y = 0.f;
+                float currentPitch = glm::asin(glm::dot(camera.GetViewDirection(), camera.up)); // Angle from horizontal
+                float newPitch = currentPitch + angle.y;
 
-                glm::mat4 rotationMatrixX = glm::mat4(1.f);
-                rotationMatrixX = glm::rotate(rotationMatrixX, angle.x, camera.up);
-                position = (rotationMatrixX * (position - pivot)) + pivot;
+                const float maxPitch = glm::radians(85.0f);
+                if (newPitch > maxPitch)
+                    angle.y = maxPitch - currentPitch;
+                else if (newPitch < -maxPitch)
+                    angle.y = -maxPitch - currentPitch;
 
-                glm::mat4 rotationMatrixY = glm::mat4(1.f);
-                rotationMatrixY = glm::rotate(rotationMatrixY, angle.y, camera.GetRightVector());
-                glm::vec3 finalPosition = (rotationMatrixY * (position - pivot)) + pivot;
+                // Rotation around up and right vectors
+                glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.f), angle.x, camera.up);
+                glm::mat4 rotationMatrixY = glm::rotate(glm::mat4(1.f), angle.y, camera.GetRightVector());
 
-                camera.position = finalPosition;
+                glm::mat4 rotationMatrix = rotationMatrixX * rotationMatrixY;
+                glm::vec4 newPosition = rotationMatrix * (position - pivot) + pivot;
+
+                camera.position = glm::vec3(newPosition);
             }
 
             camera.view = glm::lookAt(camera.position, camera.target, camera.up);
