@@ -9,20 +9,21 @@ static SandboxState state;
 
 void Sandbox_OnCreate()
 {
-    float vertices[] = {
-        0.5f,  0.5f,  0.0f, // top right
-        0.5f,  -0.5f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f, // bottom left
-        -0.5f, 0.5f,  0.0f  // top left
+    Vertex vertices[] = {
+        (Vertex){glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec2(0.f, 0.f)}, // bottom left
+        (Vertex){glm::vec3(0.5f, -0.5f, 0.0f), glm::vec2(1.f, 0.f)},  // bottom right
+        (Vertex){glm::vec3(0.5f, 0.5f, 0.0f), glm::vec2(1.f, 1.f)},   // top right
+        (Vertex){glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec2(0.f, 1.f)}   // top left
     };
 
     u32 indices[] = {
-        0, 1, 3, // first Triangle
-        1, 2, 3  // second Triangle
+        0, 1, 2, // first Triangle
+        2, 3, 0  // second Triangle
     };
 
     SetClearColor(0.12f, 0.12f, 0.12f);
 
+    state.texture = LoadTexture("assets/textures/texture2.png");
     state.shader = LoadShader("assets/shaders/Default_vs.glsl", "assets/shaders/Default_fs.glsl");
 
     state.vertexArray = CreateVertexArray();
@@ -35,7 +36,9 @@ void Sandbox_OnCreate()
 
     SetVertexBufferData(vertices, sizeof(vertices));
     SetIndexBufferData(indices, sizeof(indices));
-    SetVertexArrayAttribute(0, 3, 3 * sizeof(float), 0);
+
+    SetVertexArrayAttribute(0, 3, offsetof(Vertex, position));
+    SetVertexArrayAttribute(1, 2, offsetof(Vertex, texCoord));
 
     UnbindVertexBuffer();
     UnbindIndexBuffer();
@@ -51,6 +54,7 @@ void Sandbox_OnUpdate()
 void Sandbox_OnRender()
 {
     BindShader(state.shader);
+    BindTexture(state.texture, 0);
 
     BindVertexArray(state.vertexArray);
     BindIndexBuffer(state.indexBuffer);
@@ -73,4 +77,5 @@ void Sandbox_OnShutdown()
 
     DestroyVertexArray(state.vertexArray);
     DestroyBuffer(state.vertexBuffer);
+    DestroyBuffer(state.indexBuffer);
 }

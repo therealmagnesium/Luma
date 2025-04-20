@@ -77,10 +77,10 @@ namespace Luma
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferSize, data, GL_STATIC_DRAW);
         }
 
-        void SetVertexArrayAttribute(u32 location, u32 elementCount, u32 stride, u32 offset)
+        void SetVertexArrayAttribute(u32 location, u32 elementCount, u32 offset)
         {
             glEnableVertexAttribArray(location);
-            glVertexAttribPointer(location, elementCount, GL_FLOAT, false, stride, (void*)(u64)offset);
+            glVertexAttribPointer(location, elementCount, GL_FLOAT, false, sizeof(Vertex), (void*)(u64)offset);
         }
     }
 }
