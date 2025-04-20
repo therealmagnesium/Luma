@@ -5,6 +5,7 @@
 #include "Luma/Core/Log.h"
 
 #include <SDL3/SDL.h>
+#include <glm/ext/matrix_clip_space.hpp>
 
 namespace Luma
 {
@@ -24,27 +25,52 @@ namespace Luma
 
             state.window = CreateWindow(appInfo.windowWidth, appInfo.windowHeight, appInfo.name.c_str());
 
+            state.defaultShader = LoadShader("assets/shaders/Default_vs.glsl", "assets/shaders/Default_fs.glsl");
+            state.defaultShader.CreateUniform("modelMatrix");
+            state.defaultShader.CreateUniform("viewMatrix");
+            state.defaultShader.CreateUniform("projectionMatrix");
+
             INFO("The renderer was initialized successfully");
         }
 
         void RendererShutdown()
         {
             INFO("Shutting down the renderer...");
+
+            UnloadShader(state.defaultShader);
             DestroyWindow(state.window);
         }
 
         void RendererBegin()
         {
+            BindShader(state.defaultShader);
+
+            if (state.primaryCamera != NULL)
+            {
+                Core::ApplicationConfig& appInfo = Core::GetApplicationInfo();
+                float aspectRatio = appInfo.windowWidth / (float)appInfo.windowHeight;
+
+                state.projection = glm::perspective(state.primaryCamera->fov, aspectRatio, 0.1f, 200.f);
+
+                state.defaultShader.SetMat4("viewMatrix", state.primaryCamera->view);
+                state.defaultShader.SetMat4("projectionMatrix", state.projection);
+            }
         }
 
         void RendererEnd()
         {
             DisplayWindow(state.window);
+            UnbindShader();
         }
 
         void RendererClear(float r, float g, float b)
         {
             RenderCommand::Clear(r, g, b);
+        }
+
+        Shader& GetDefaultShader()
+        {
+            return state.defaultShader;
         }
 
         Window& GetMainWindow()
@@ -64,6 +90,10 @@ namespace Luma
             state.clearColor.z = b;
         }
 
+        void SetPrimaryCamera(Camera& camera)
+        {
+            state.primaryCamera = &camera;
+        }
     }
 
 }

@@ -10,8 +10,7 @@ struct SandboxState
     u32 vertexArray;
     u32 vertexBuffer;
     u32 indexBuffer;
-    Texture texture;
-    Shader shader;
+    Camera camera;
 };
 
 void Sandbox_OnCreate();

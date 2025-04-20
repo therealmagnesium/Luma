@@ -46,8 +46,8 @@ namespace Luma
                 state.handle->OnUpdate();
 
                 Graphics::RendererBegin();
-                Graphics::RenderCommand::Clear(V3_OPEN(clearColor));
 
+                Graphics::RenderCommand::Clear(V3_OPEN(clearColor));
                 state.handle->OnRender();
 
                 Graphics::RendererEnd();

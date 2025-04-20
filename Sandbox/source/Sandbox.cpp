@@ -1,5 +1,8 @@
 #include "Sandbox.h"
+
 #include <Luma.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace Luma;
 using namespace Luma::Core;
@@ -23,8 +26,12 @@ void Sandbox_OnCreate()
 
     SetClearColor(0.12f, 0.12f, 0.12f);
 
-    state.texture = LoadTexture("assets/textures/texture2.png");
-    state.shader = LoadShader("assets/shaders/Default_vs.glsl", "assets/shaders/Default_fs.glsl");
+    state.camera.position = glm::vec3(0.f, 0.f, 3.f);
+    state.camera.target = glm::vec3(0.f);
+    state.camera.up = glm::vec3(0.f, 1.f, 0.f);
+    state.camera.moveSpeed = 0.15f;
+    state.camera.lookSensitivity = 3.f;
+    SetPrimaryCamera(state.camera);
 
     state.vertexArray = CreateVertexArray();
     state.vertexBuffer = CreateBuffer();
@@ -49,12 +56,14 @@ void Sandbox_OnUpdate()
 {
     if (IsKeyPressed(KEY_ESCAPE))
         QuitApplication();
+
+    UpdateCamera(state.camera, CAMERA_TYPE_ARCBALL);
 }
 
 void Sandbox_OnRender()
 {
-    BindShader(state.shader);
-    BindTexture(state.texture, 0);
+    Shader& defaultShader = GetDefaultShader();
+    defaultShader.SetMat4("modelMatrix", glm::mat4(1.f));
 
     BindVertexArray(state.vertexArray);
     BindIndexBuffer(state.indexBuffer);
@@ -63,8 +72,6 @@ void Sandbox_OnRender()
 
     UnbindIndexBuffer();
     UnbindVertexArray();
-
-    UnbindShader();
 }
 
 void Sandbox_OnRenderUI()
@@ -73,8 +80,6 @@ void Sandbox_OnRenderUI()
 
 void Sandbox_OnShutdown()
 {
-    UnloadShader(state.shader);
-
     DestroyVertexArray(state.vertexArray);
     DestroyBuffer(state.vertexBuffer);
     DestroyBuffer(state.indexBuffer);

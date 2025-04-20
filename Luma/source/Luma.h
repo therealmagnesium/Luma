@@ -6,6 +6,7 @@
 #include "Luma/Core/KeyCodes.h"
 #include "Luma/Core/Log.h"
 
+#include "Luma/Graphics/Camera.h"
 #include "Luma/Graphics/RenderCommand.h"
 #include "Luma/Graphics/Renderer.h"
 #include "Luma/Graphics/RendererInternal.h"
