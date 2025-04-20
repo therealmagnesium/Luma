@@ -89,47 +89,64 @@ namespace Luma
             glUseProgram(0);
         }
 
-        void Shader::CreateUniform(const char* name)
+        void CreateShaderUniform(Shader& shader, const char* name)
         {
-            if (uniforms.find(name) != uniforms.end())
+            if (shader.uniforms.find(name) != shader.uniforms.end())
             {
-                WARN("Uniform %s has already been created for shader with id %d", name, id);
+                WARN("Uniform %s has already been created for shader with id %d", name, shader.id);
                 return;
             }
-            uniforms[name] = glGetUniformLocation(id, name);
+            shader.uniforms[name] = glGetUniformLocation(shader.id, name);
 
-            if (uniforms[name] == -1)
-                WARN("Shader with id %d could not find uniform \"%s\"", id, name);
+            if (shader.uniforms[name] == -1)
+                WARN("Shader with id %d could not find uniform \"%s\"", shader.id, name);
         }
 
-        void Shader::SetInt(const char* name, s32 value)
+        void SetShaderUniform(Shader& shader, const char* name, void* data, ShaderUniformType uniformType)
         {
-            if (uniforms.find(name) != uniforms.end())
-                glUniform1i(uniforms[name], value);
-        }
+            if (shader.uniforms.find(name) != shader.uniforms.end() && data != NULL)
+            {
+                switch (uniformType)
+                {
+                    case SHADER_UNIFORM_INT:
+                    {
+                        u32* newData = (u32*)data;
+                        glUniform1i(shader.uniforms[name], *newData);
+                        break;
+                    }
 
-        void Shader::SetFloat(const char* name, float value)
-        {
-            if (uniforms.find(name) != uniforms.end())
-                glUniform1f(uniforms[name], value);
-        }
+                    case SHADER_UNIFORM_FLOAT:
+                    {
+                        float* newData = (float*)data;
+                        glUniform1f(shader.uniforms[name], *newData);
+                        break;
+                    }
 
-        void Shader::SetVec3(const char* name, const glm::vec3& value)
-        {
-            if (uniforms.find(name) != uniforms.end())
-                glUniform3fv(uniforms[name], 1, glm::value_ptr(value));
-        }
+                    case SHADER_UNIFORM_VEC3:
+                    {
+                        glm::vec3* newData = (glm::vec3*)data;
+                        glUniform3fv(shader.uniforms[name], 1, glm::value_ptr(*newData));
+                        break;
+                    }
 
-        void Shader::SetVec4(const char* name, const glm::vec4& value)
-        {
-            if (uniforms.find(name) != uniforms.end())
-                glUniform4fv(uniforms[name], 1, glm::value_ptr(value));
-        }
+                    case SHADER_UNIFORM_VEC4:
+                    {
+                        glm::vec4* newData = (glm::vec4*)data;
+                        glUniform4fv(shader.uniforms[name], 1, glm::value_ptr(*newData));
+                        break;
+                    }
 
-        void Shader::SetMat4(const char* name, const glm::mat4& value)
-        {
-            if (uniforms.find(name) != uniforms.end())
-                glUniformMatrix4fv(uniforms[name], 1, false, glm::value_ptr(value));
+                    case SHADER_UNIFORM_MAT4:
+                    {
+                        glm::vec4* newData = (glm::vec4*)data;
+                        glUniformMatrix4fv(shader.uniforms[name], 1, false, glm::value_ptr(*newData));
+                        break;
+                    }
+
+                    default:
+                        break;
+                }
+            }
         }
 
     }

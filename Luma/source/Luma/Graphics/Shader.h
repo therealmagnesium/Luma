@@ -9,6 +9,15 @@ namespace Luma
 {
     namespace Graphics
     {
+        enum ShaderUniformType
+        {
+            SHADER_UNIFORM_INT = 0,
+            SHADER_UNIFORM_FLOAT,
+            SHADER_UNIFORM_VEC3,
+            SHADER_UNIFORM_VEC4,
+            SHADER_UNIFORM_MAT4,
+        };
+
         struct ShaderSource
         {
             std::string vertexPath;
@@ -20,13 +29,6 @@ namespace Luma
             u32 id = 0;
             std::unordered_map<std::string, s32> uniforms;
             ShaderSource source;
-
-            void CreateUniform(const char* name);
-            void SetInt(const char* name, s32 value);
-            void SetFloat(const char* name, float value);
-            void SetVec3(const char* name, const glm::vec3& value);
-            void SetVec4(const char* name, const glm::vec4& value);
-            void SetMat4(const char* name, const glm::mat4& value);
         };
 
         Shader LoadShader(const char* vertexPath, const char* fragmentPath);
@@ -34,5 +36,8 @@ namespace Luma
 
         void BindShader(Shader& shader);
         void UnbindShader();
+
+        void CreateShaderUniform(Shader& shader, const char* name);
+        void SetShaderUniform(Shader& shader, const char* name, void* data, ShaderUniformType uniformType);
     }
 }

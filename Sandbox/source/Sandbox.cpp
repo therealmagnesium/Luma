@@ -9,6 +9,7 @@ using namespace Luma::Core;
 using namespace Luma::Graphics;
 
 static SandboxState state;
+static glm::mat4 transform = glm::mat4(1.f);
 
 void Sandbox_OnCreate()
 {
@@ -63,7 +64,7 @@ void Sandbox_OnUpdate()
 void Sandbox_OnRender()
 {
     Shader& defaultShader = GetDefaultShader();
-    defaultShader.SetMat4("modelMatrix", glm::mat4(1.f));
+    SetShaderUniform(defaultShader, "modelMatrix", &transform, SHADER_UNIFORM_MAT4);
 
     BindVertexArray(state.vertexArray);
     BindIndexBuffer(state.indexBuffer);

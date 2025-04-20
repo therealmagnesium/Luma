@@ -26,9 +26,9 @@ namespace Luma
             state.window = CreateWindow(appInfo.windowWidth, appInfo.windowHeight, appInfo.name.c_str());
 
             state.defaultShader = LoadShader("assets/shaders/Default_vs.glsl", "assets/shaders/Default_fs.glsl");
-            state.defaultShader.CreateUniform("modelMatrix");
-            state.defaultShader.CreateUniform("viewMatrix");
-            state.defaultShader.CreateUniform("projectionMatrix");
+            CreateShaderUniform(state.defaultShader, "modelMatrix");
+            CreateShaderUniform(state.defaultShader, "viewMatrix");
+            CreateShaderUniform(state.defaultShader, "projectionMatrix");
 
             INFO("The renderer was initialized successfully");
         }
@@ -52,8 +52,8 @@ namespace Luma
 
                 state.projection = glm::perspective(state.primaryCamera->fov, aspectRatio, 0.1f, 200.f);
 
-                state.defaultShader.SetMat4("viewMatrix", state.primaryCamera->view);
-                state.defaultShader.SetMat4("projectionMatrix", state.projection);
+                SetShaderUniform(state.defaultShader, "viewMatrix", &state.primaryCamera->view, SHADER_UNIFORM_MAT4);
+                SetShaderUniform(state.defaultShader, "projectionMatrix", &state.projection, SHADER_UNIFORM_MAT4);
             }
         }
 
