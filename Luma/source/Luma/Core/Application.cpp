@@ -38,13 +38,15 @@ namespace Luma
 
             while (state.isRunning)
             {
+                const glm::vec3& clearColor = Graphics::GetClearColor();
                 Graphics::Window& mainWindow = Graphics::GetMainWindow();
+
                 Graphics::HandleWindowEvents(mainWindow);
 
                 state.handle->OnUpdate();
 
                 Graphics::RendererBegin();
-                Graphics::RenderCommand::Clear(1.f, 1.f, 1.f);
+                Graphics::RenderCommand::Clear(V3_OPEN(clearColor));
 
                 state.handle->OnRender();
 

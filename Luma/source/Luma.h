@@ -8,4 +8,6 @@
 
 #include "Luma/Graphics/RenderCommand.h"
 #include "Luma/Graphics/Renderer.h"
+#include "Luma/Graphics/RendererInternal.h"
+#include "Luma/Graphics/Shader.h"
 #include "Luma/Graphics/Window.h"

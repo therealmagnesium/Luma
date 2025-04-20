@@ -1,4 +1,5 @@
 #include "Luma/Graphics/Window.h"
+#include "Luma/Graphics/RenderCommand.h"
 
 #include "Luma/Core/Application.h"
 #include "Luma/Core/Input.h"
@@ -22,6 +23,8 @@ namespace Luma
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
             SDL_GL_SetSwapInterval(1);
 
             window.handle = SDL_CreateWindow(title, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
@@ -35,6 +38,7 @@ namespace Luma
 
             glEnable(GL_DEPTH_TEST);
             glEnable(GL_BLEND);
+            glEnable(GL_MULTISAMPLE);
             // glEnable(GL_CULL_FACE);
 
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -103,7 +107,7 @@ namespace Luma
                         config.windowWidth = window.width;
                         config.windowHeight = window.height;
 
-                        // RenderCommand::SetViewport(window.width, window.height);
+                        RenderCommand::SetViewport(window.width, window.height);
                         //  INFO("Resized window \"%s\" to %dx%d", window.title.c_str(), window.width, window.height);
                     }
                 }
