@@ -39,7 +39,7 @@ namespace Luma
             glEnable(GL_DEPTH_TEST);
             glEnable(GL_BLEND);
             glEnable(GL_MULTISAMPLE);
-            // glEnable(GL_CULL_FACE);
+            glEnable(GL_CULL_FACE);
 
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

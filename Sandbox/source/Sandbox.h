@@ -8,9 +8,10 @@ using namespace Luma::Graphics;
 struct SandboxState
 {
     Camera camera;
-    Mesh mesh;
-    Material material;
-    Texture texture;
+    Mesh quadMesh;
+    Mesh cubeMesh;
+    Material materials[2];
+    Texture textures[2];
 };
 
 void Sandbox_OnCreate();

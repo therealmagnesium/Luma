@@ -9,36 +9,28 @@ using namespace Luma::Core;
 using namespace Luma::Graphics;
 
 static SandboxState state;
-static glm::mat4 transform = glm::mat4(1.f);
 
 void Sandbox_OnCreate()
 {
-    Vertex vertices[] = {
-        (Vertex){glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec2(0.f, 0.f)}, // bottom left
-        (Vertex){glm::vec3(0.5f, -0.5f, 0.0f), glm::vec2(1.f, 0.f)},  // bottom right
-        (Vertex){glm::vec3(0.5f, 0.5f, 0.0f), glm::vec2(1.f, 1.f)},   // top right
-        (Vertex){glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec2(0.f, 1.f)}   // top left
-    };
-
-    u32 indices[] = {
-        0, 1, 2, // first Triangle
-        2, 3, 0  // second Triangle
-    };
-
     SetClearColor(0.12f, 0.12f, 0.12f);
 
-    state.camera.position = glm::vec3(0.f, 0.f, 3.f);
+    state.camera.position = glm::vec3(0.f, 2.f, 5.f);
     state.camera.target = glm::vec3(0.f);
     state.camera.up = glm::vec3(0.f, 1.f, 0.f);
     state.camera.moveSpeed = 0.15f;
     state.camera.lookSensitivity = 3.f;
     SetPrimaryCamera(state.camera);
 
-    state.texture = LoadTexture("assets/textures/small_checker.png");
-    state.mesh = CreateMesh(vertices, LEN(vertices), indices, LEN(indices));
+    state.textures[0] = LoadTexture("assets/textures/texel_checker.png");
+    state.textures[1] = LoadTexture("assets/textures/small_checker.png");
+    state.quadMesh = GenMeshQuad();
+    state.cubeMesh = GenMeshCube();
 
-    state.material = LoadMaterialDefault();
-    state.material.albedoTexture = &state.texture;
+    state.materials[0] = LoadMaterialDefault();
+    state.materials[0].albedoTexture = &state.textures[0];
+
+    state.materials[1] = LoadMaterialDefault();
+    state.materials[1].albedoTexture = &state.textures[1];
 }
 
 void Sandbox_OnUpdate()
@@ -51,7 +43,8 @@ void Sandbox_OnUpdate()
 
 void Sandbox_OnRender()
 {
-    DrawMesh(state.mesh, transform, state.material);
+    DrawMesh(state.cubeMesh, glm::scale(glm::mat4(1.f), glm::vec3(5.f, 0.2f, 5.f)), state.materials[0]);
+    DrawMesh(state.quadMesh, glm::translate(glm::mat4(1.f), glm::vec3(0.f, 1.f, 0.f)), state.materials[1]);
 }
 
 void Sandbox_OnRenderUI()
@@ -60,5 +53,6 @@ void Sandbox_OnRenderUI()
 
 void Sandbox_OnShutdown()
 {
-    DestroyMesh(state.mesh);
+    DestroyMesh(state.quadMesh);
+    DestroyMesh(state.cubeMesh);
 }

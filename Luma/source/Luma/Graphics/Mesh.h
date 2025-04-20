@@ -19,6 +19,8 @@ namespace Luma
         };
 
         Mesh CreateMesh(Vertex* vertices, u32 vertexCount, u32* indices, u32 indexCount);
+        Mesh GenMeshQuad();
+        Mesh GenMeshCube();
         void DestroyMesh(Mesh& mesh);
         void DrawMesh(Mesh& mesh, const glm::mat4& transform, Material& material);
     }
