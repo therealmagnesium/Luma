@@ -14,17 +14,21 @@ namespace Luma
         };
 
         u32 CreateVertexArray();
-        u32 CreateVertexBuffer();
+        u32 CreateBuffer();
+
         void DestroyVertexArray(u32& vao);
-        void DestroyVertexBuffer(u32& vbo);
+        void DestroyBuffer(u32& vbo);
 
-        void BindVertexArray(u32& vao);
-        void BindVertexBuffer(u32& vbo);
-
-        void SetVertexBufferData(void* data, u32 bufferSize);
-        void SetVertexArrayAttribute(u32 location, u32 elementCount, u32 stride, u32 offset);
+        void BindVertexArray(u32 vao);
+        void BindVertexBuffer(u32 vbo);
+        void BindIndexBuffer(u32 ebo);
 
         void UnbindVertexArray();
         void UnbindVertexBuffer();
+        void UnbindIndexBuffer();
+
+        void SetVertexBufferData(void* data, u32 bufferSize);
+        void SetIndexBufferData(u32* data, u32 bufferSize);
+        void SetVertexArrayAttribute(u32 location, u32 elementCount, u32 stride, u32 offset);
     }
 }

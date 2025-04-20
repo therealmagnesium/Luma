@@ -23,6 +23,11 @@ namespace Luma
             {
                 glDrawArrays(GL_TRIANGLES, 0, numIndices);
             }
+
+            void DrawIndexed(u32 numIndices)
+            {
+                glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, NULL);
+            }
         }
     }
 }
