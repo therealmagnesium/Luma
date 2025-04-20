@@ -34,23 +34,7 @@ void Sandbox_OnCreate()
     state.camera.lookSensitivity = 3.f;
     SetPrimaryCamera(state.camera);
 
-    state.vertexArray = CreateVertexArray();
-    state.vertexBuffer = CreateBuffer();
-    state.indexBuffer = CreateBuffer();
-
-    BindVertexArray(state.vertexArray);
-    BindVertexBuffer(state.vertexBuffer);
-    BindIndexBuffer(state.indexBuffer);
-
-    SetVertexBufferData(vertices, sizeof(vertices));
-    SetIndexBufferData(indices, sizeof(indices));
-
-    SetVertexArrayAttribute(0, 3, offsetof(Vertex, position));
-    SetVertexArrayAttribute(1, 2, offsetof(Vertex, texCoord));
-
-    UnbindVertexBuffer();
-    UnbindIndexBuffer();
-    UnbindVertexArray();
+    state.mesh = CreateMesh(vertices, LEN(vertices), indices, LEN(indices));
 }
 
 void Sandbox_OnUpdate()
@@ -63,16 +47,7 @@ void Sandbox_OnUpdate()
 
 void Sandbox_OnRender()
 {
-    Shader& defaultShader = GetDefaultShader();
-    SetShaderUniform(defaultShader, "modelMatrix", &transform, SHADER_UNIFORM_MAT4);
-
-    BindVertexArray(state.vertexArray);
-    BindIndexBuffer(state.indexBuffer);
-
-    RenderCommand::DrawIndexed(6);
-
-    UnbindIndexBuffer();
-    UnbindVertexArray();
+    DrawMesh(state.mesh, transform);
 }
 
 void Sandbox_OnRenderUI()
@@ -81,7 +56,4 @@ void Sandbox_OnRenderUI()
 
 void Sandbox_OnShutdown()
 {
-    DestroyVertexArray(state.vertexArray);
-    DestroyBuffer(state.vertexBuffer);
-    DestroyBuffer(state.indexBuffer);
 }

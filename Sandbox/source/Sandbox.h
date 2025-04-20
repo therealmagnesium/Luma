@@ -7,10 +7,8 @@ using namespace Luma::Graphics;
 
 struct SandboxState
 {
-    u32 vertexArray;
-    u32 vertexBuffer;
-    u32 indexBuffer;
     Camera camera;
+    Mesh mesh;
 };
 
 void Sandbox_OnCreate();
