@@ -1,5 +1,6 @@
 #include "Luma/Core/Application.h"
 #include "Luma/Core/Log.h"
+#include "Luma/Core/Time.h"
 
 #include "Luma/Graphics/RenderCommand.h"
 #include "Luma/Graphics/Renderer.h"
@@ -26,6 +27,7 @@ namespace Luma
             state.isRunning = true;
             state.handle = app;
 
+            TimeStateInitialize(60);
             Graphics::RendererInit();
 
             isInitialized = true;
@@ -41,6 +43,7 @@ namespace Luma
                 const glm::vec3& clearColor = Graphics::GetClearColor();
                 Graphics::Window& mainWindow = Graphics::GetMainWindow();
 
+                TimeStateUpdate();
                 Graphics::HandleWindowEvents(mainWindow);
 
                 state.handle->OnUpdate();

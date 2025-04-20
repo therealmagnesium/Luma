@@ -5,6 +5,7 @@
 #include "Luma/Core/Input.h"
 #include "Luma/Core/KeyCodes.h"
 #include "Luma/Core/Log.h"
+#include "Luma/Core/Time.h"
 
 #include "Luma/Graphics/Camera.h"
 #include "Luma/Graphics/Material.h"

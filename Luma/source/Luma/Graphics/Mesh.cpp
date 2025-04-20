@@ -55,7 +55,7 @@ namespace Luma
                 BindVertexArray(mesh.vertexArray);
                 BindIndexBuffer(mesh.indexBuffer);
 
-                RenderCommand::DrawIndexed(6);
+                RenderCommand::DrawIndexed(mesh.indices.size());
 
                 UnbindIndexBuffer();
                 UnbindVertexArray();
