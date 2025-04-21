@@ -89,7 +89,7 @@ namespace Luma
         {
             if (mesh.vertexArray != 0)
             {
-                INFO("Destorying mesh with ID %d", mesh.vertexArray);
+                INFO("Destorying mesh with an ID of %d", mesh.vertexArray);
                 DestroyVertexArray(mesh.vertexArray);
                 DestroyBuffer(mesh.vertexBuffer);
                 DestroyBuffer(mesh.indexBuffer);
@@ -104,19 +104,26 @@ namespace Luma
         {
             Core::ApplicationConfig& appInfo = Core::GetApplicationInfo();
             const float aspectRatio = appInfo.windowWidth / (float)appInfo.windowHeight;
+            const u32 albedoTextureSlot = 0;
 
             if (material.shader != NULL && GetPrimaryCamera() != NULL)
             {
+                glm::mat4 normalMatrix = glm::transpose(glm::inverse(transform));
+
                 BindShader(*material.shader);
 
                 SetShaderUniform(*material.shader, "modelMatrix", (void*)&transform, SHADER_UNIFORM_MAT4);
                 SetShaderUniform(*material.shader, "viewMatrix", &GetPrimaryCamera()->view, SHADER_UNIFORM_MAT4);
                 SetShaderUniform(*material.shader, "projectionMatrix", (void*)&GetProjection(), SHADER_UNIFORM_MAT4);
+                SetShaderUniform(*material.shader, "normalMatrix", &normalMatrix, SHADER_UNIFORM_MAT4);
+                SetShaderUniform(*material.shader, "viewWorldPosition", &GetPrimaryCamera()->position,
+                                 SHADER_UNIFORM_VEC3);
                 SetShaderUniform(*material.shader, "material.albedo", &material.albedo, SHADER_UNIFORM_VEC3);
-                SetShaderUniform(*material.shader, "material.albedoTexture", 0, SHADER_UNIFORM_INT);
+                SetShaderUniform(*material.shader, "material.albedoTexture", (void*)&albedoTextureSlot,
+                                 SHADER_UNIFORM_INT);
 
                 if (material.albedoTexture != NULL)
-                    BindTexture(*material.albedoTexture, 0);
+                    BindTexture(*material.albedoTexture, albedoTextureSlot);
 
                 BindVertexArray(mesh.vertexArray);
                 BindIndexBuffer(mesh.indexBuffer);

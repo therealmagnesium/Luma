@@ -9,11 +9,12 @@ out vec3 fragNormal;
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform mat4 normalMatrix;
 
 void main()
 {
     fragTexCoord = texCoord;
-    fragNormal = normal * mat3(transpose(inverse(modelMatrix)));
+    fragNormal = normal * mat3(normalMatrix);
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.f);
 }
 

@@ -2,7 +2,6 @@
 out vec4 finalColor;
 
 in vec2 fragTexCoord;
-in vec3 fragNormal;
 
 struct Material
 {
@@ -17,7 +16,7 @@ vec3 GetObjectColor()
     vec3 color = material.albedo;    
     vec3 texel = texture(material.albedoTexture, fragTexCoord).xyz;
 
-    if ((any(greaterThan(texel, vec3(0.f)))))
+    if (any(greaterThan(texel, vec3(0.f))))
         color *= texel;
 
     return color;

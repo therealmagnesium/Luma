@@ -10,9 +10,14 @@ struct SandboxState
     Shader* defaultShader = NULL;
     Shader* uvShader = NULL;
     Shader* normalShader = NULL;
+    Shader* phongShader = NULL;
+
     Camera camera;
+    DirectionalLight sun;
+
     Mesh quadMesh;
     Mesh cubeMesh;
+
     Material materials[2];
     Texture textures[2];
 };

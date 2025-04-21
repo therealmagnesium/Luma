@@ -12,35 +12,28 @@ namespace Luma
     namespace Graphics
     {
         static RenderState state;
+        static bool isInitialized = false;
+
+        void InitializeStartupShaders();
 
         void RendererInit()
         {
+            if (isInitialized)
+            {
+                WARN("Cannot initialize the renderer  more than once");
+                return;
+            }
+
             const Core::ApplicationConfig& appInfo = Core::GetApplicationInfo();
 
             if (!SDL_Init(SDL_INIT_VIDEO))
             {
-                FATAL("%s", "Failed to initialize SDL!");
+                FATAL("Failed to initialize SDL!");
                 Core::QuitApplication();
             }
 
             state.window = CreateWindow(appInfo.windowWidth, appInfo.windowHeight, appInfo.name.c_str());
-
-            state.defaultShader = LoadShader("assets/shaders/Default_vs.glsl", "assets/shaders/Default_fs.glsl");
-            CreateShaderUniform(state.defaultShader, "modelMatrix");
-            CreateShaderUniform(state.defaultShader, "viewMatrix");
-            CreateShaderUniform(state.defaultShader, "projectionMatrix");
-            CreateShaderUniform(state.defaultShader, "material.albedo");
-            CreateShaderUniform(state.defaultShader, "material.albedoTexture");
-
-            state.uvShader = LoadShader("assets/shaders/UV_vs.glsl", "assets/shaders/UV_fs.glsl");
-            CreateShaderUniform(state.uvShader, "modelMatrix");
-            CreateShaderUniform(state.uvShader, "viewMatrix");
-            CreateShaderUniform(state.uvShader, "projectionMatrix");
-
-            state.normalShader = LoadShader("assets/shaders/Normal_vs.glsl", "assets/shaders/Normal_fs.glsl");
-            CreateShaderUniform(state.normalShader, "modelMatrix");
-            CreateShaderUniform(state.normalShader, "viewMatrix");
-            CreateShaderUniform(state.normalShader, "projectionMatrix");
+            InitializeStartupShaders();
 
             INFO("The renderer was initialized successfully");
         }
@@ -92,6 +85,11 @@ namespace Luma
             return state.normalShader;
         }
 
+        Shader& GetPhongShader()
+        {
+            return state.phongShader;
+        }
+
         Window& GetMainWindow()
         {
             return state.window;
@@ -122,6 +120,39 @@ namespace Luma
         void SetPrimaryCamera(Camera& camera)
         {
             state.primaryCamera = &camera;
+        }
+
+        void InitializeStartupShaders()
+        {
+            state.defaultShader = LoadShader("assets/shaders/Default_vs.glsl", "assets/shaders/Default_fs.glsl");
+            CreateShaderUniform(state.defaultShader, "modelMatrix");
+            CreateShaderUniform(state.defaultShader, "viewMatrix");
+            CreateShaderUniform(state.defaultShader, "projectionMatrix");
+            CreateShaderUniform(state.defaultShader, "material.albedo");
+            CreateShaderUniform(state.defaultShader, "material.albedoTexture");
+
+            state.uvShader = LoadShader("assets/shaders/UV_vs.glsl", "assets/shaders/UV_fs.glsl");
+            CreateShaderUniform(state.uvShader, "modelMatrix");
+            CreateShaderUniform(state.uvShader, "viewMatrix");
+            CreateShaderUniform(state.uvShader, "projectionMatrix");
+
+            state.normalShader = LoadShader("assets/shaders/Normal_vs.glsl", "assets/shaders/Normal_fs.glsl");
+            CreateShaderUniform(state.normalShader, "modelMatrix");
+            CreateShaderUniform(state.normalShader, "viewMatrix");
+            CreateShaderUniform(state.normalShader, "projectionMatrix");
+            CreateShaderUniform(state.normalShader, "normalMatrix");
+
+            state.phongShader = LoadShader("assets/shaders/Phong_vs.glsl", "assets/shaders/Phong_fs.glsl");
+            CreateShaderUniform(state.phongShader, "modelMatrix");
+            CreateShaderUniform(state.phongShader, "viewMatrix");
+            CreateShaderUniform(state.phongShader, "projectionMatrix");
+            CreateShaderUniform(state.phongShader, "normalMatrix");
+            CreateShaderUniform(state.phongShader, "viewWorldPosition");
+            CreateShaderUniform(state.phongShader, "material.albedo");
+            CreateShaderUniform(state.phongShader, "material.albedoTexture");
+            CreateShaderUniform(state.phongShader, "sun.intensity");
+            CreateShaderUniform(state.phongShader, "sun.color");
+            CreateShaderUniform(state.phongShader, "sun.direction");
         }
     }
 
