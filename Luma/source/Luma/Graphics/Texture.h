@@ -26,6 +26,8 @@ namespace Luma
 
         Texture LoadTexture(const char* path);
         void BindTexture(Texture& texture, u8 slot);
+        void UnbindTexture();
         u32 TextureFormatToGL(TextureFormat format);
+        u32 TextureFormatToGLInternal(TextureFormat format);
     }
 }

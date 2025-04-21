@@ -20,7 +20,7 @@ void Sandbox_OnCreate()
     state.phongShader = &GetPhongShader();
 
     state.textures[0] = LoadTexture("assets/textures/texture0.png");
-    state.textures[1] = LoadTexture("assets/textures/texture2.png");
+    state.textures[1] = LoadTexture("assets/textures/color_grid.png");
 
     state.quadMesh = GenMeshQuad();
     state.cubeMesh = GenMeshCube();
@@ -33,7 +33,7 @@ void Sandbox_OnCreate()
     SetPrimaryCamera(state.camera);
 
     state.sun.direction = glm::vec3(-0.2f, -1.f, -0.3f);
-    state.sun.intensity = 1.5f;
+    state.sun.intensity = 2.f;
 
     state.materials[0] = LoadMaterialDefault();
     state.materials[0].albedoTexture = &state.textures[0];

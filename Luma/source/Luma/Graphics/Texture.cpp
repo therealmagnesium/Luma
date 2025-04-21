@@ -39,17 +39,18 @@ namespace Luma
             }
 
             u32 glFormat = TextureFormatToGL(texture.format);
+            u32 internalFormat = TextureFormatToGLInternal(texture.format);
 
             glBindTexture(GL_TEXTURE_2D, texture.id);
-
-            glTexImage2D(GL_TEXTURE_2D, 0, glFormat, texture.width, texture.height, 0, glFormat, GL_UNSIGNED_BYTE,
-                         data);
-            glGenerateMipmap(GL_TEXTURE_2D);
 
             glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, texture.width, texture.height, 0, glFormat, GL_UNSIGNED_BYTE,
+                         data);
+            glGenerateMipmap(GL_TEXTURE_2D);
 
             glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -65,6 +66,11 @@ namespace Luma
             glActiveTexture(GL_TEXTURE0 + slot);
         }
 
+        void UnbindTexture()
+        {
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
+
         u32 TextureFormatToGL(TextureFormat format)
         {
             u32 glFormat = 0;
@@ -76,6 +82,28 @@ namespace Luma
                     break;
                 case TEXTURE_FORMAT_RGBA:
                     glFormat = GL_RGBA;
+                    break;
+                case TEXTURE_FORMAT_RED:
+                    glFormat = GL_RED;
+                    break;
+                default:
+                    break;
+            }
+
+            return glFormat;
+        }
+
+        u32 TextureFormatToGLInternal(TextureFormat format)
+        {
+            u32 glFormat = 0;
+
+            switch (format)
+            {
+                case TEXTURE_FORMAT_RGB:
+                    glFormat = GL_SRGB;
+                    break;
+                case TEXTURE_FORMAT_RGBA:
+                    glFormat = GL_SRGB_ALPHA;
                     break;
                 case TEXTURE_FORMAT_RED:
                     glFormat = GL_RED;

@@ -29,10 +29,8 @@ vec3 GetObjectColor()
     vec3 color = material.albedo;    
     vec3 texel = texture(material.albedoTexture, fragTexCoord).xyz;
 
-    if (any(greaterThan(texel, vec3(0.f))))
-        color *= texel;
-
-    return color;
+    vec3 result = texel* color;
+    return result;
 }
 
 float CalculateDiffuse(vec3 N, vec3 L)
@@ -43,8 +41,13 @@ float CalculateDiffuse(vec3 N, vec3 L)
 
 float CalculateSpecular(vec3 N, vec3 L, vec3 V)
 {
-    vec3 R = reflect(-L, N);
-    float kS = pow(max(dot(V, R), 0.f), 32.f);
+    // Goofy ahh phong
+    //vec3 R = reflect(-L, N);
+    //float kS = pow(max(dot(V, R), 0.f), 32.f);
+
+    // Blinn-phong is better
+    vec3 H = normalize(L + V);
+    float kS = pow(max(dot(N, H), 0.f), 32.f);
 
     return kS;
 }
@@ -66,6 +69,7 @@ void main()
     vec3 N = normalize(fragNormal);
     vec3 Lo = CalculateDirectionalLighting(N);
 
+    Lo = pow(Lo, vec3(1.f / 2.2f));
     finalColor = vec4(Lo, 1.f);
 }
 

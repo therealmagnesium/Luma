@@ -16,15 +16,14 @@ vec3 GetObjectColor()
     vec3 color = material.albedo;    
     vec3 texel = texture(material.albedoTexture, fragTexCoord).xyz;
 
-    if (any(greaterThan(texel, vec3(0.f))))
-        color *= texel;
-
-    return color;
+    return color * texel;
 }
 
 void main()
 {
-    finalColor = vec4(GetObjectColor(), 1.f);
+    vec3 color = GetObjectColor();
+    color = pow(color, vec3(1.f / 2.2f));
+    finalColor = vec4(color, 1.f);
     //finalColor = vec4(fragTexCoord, 0.9f, 1.f);
     //finalColor = vec4(abs(normalize(fragNormal)), 1.f);
 }
