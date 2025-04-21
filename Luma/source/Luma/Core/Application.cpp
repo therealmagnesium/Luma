@@ -23,6 +23,9 @@ namespace Luma
                 return;
             }
 
+            printf("============================================ Core Program Begins "
+                   "=============================================\n");
+
             srand(time(NULL));
             state.isRunning = true;
             state.handle = app;
@@ -32,6 +35,8 @@ namespace Luma
 
             isInitialized = true;
             INFO("%s", "The application was initialized successfully");
+            printf("============================================ Client Program Begins "
+                   "=============================================\n");
         }
 
         void RunApplication()
@@ -56,7 +61,12 @@ namespace Luma
                 Graphics::RendererEnd();
             }
 
+            printf("============================================ Client Program Ends "
+                   "=============================================\n");
             state.handle->OnShutdown();
+
+            printf("============================================ Core Program Ends "
+                   "=============================================\n");
             Graphics::RendererShutdown();
         }
 

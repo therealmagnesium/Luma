@@ -7,6 +7,9 @@ using namespace Luma::Graphics;
 
 struct SandboxState
 {
+    Shader* defaultShader = NULL;
+    Shader* uvShader = NULL;
+    Shader* normalShader = NULL;
     Camera camera;
     Mesh quadMesh;
     Mesh cubeMesh;

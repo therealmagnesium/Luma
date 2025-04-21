@@ -12,6 +12,8 @@ namespace Luma
         struct RenderState
         {
             Shader defaultShader;
+            Shader uvShader;
+            Shader normalShader;
             Window window;
             Camera* primaryCamera = NULL;
             glm::vec3 clearColor = glm::vec3(1.f);
@@ -25,8 +27,12 @@ namespace Luma
         void RendererClear(float r, float g, float b);
 
         Shader& GetDefaultShader();
+        Shader& GetUVShader();
+        Shader& GetNormalShader();
         Window& GetMainWindow();
+        Camera* GetPrimaryCamera();
         const glm::vec3& GetClearColor();
+        const glm::mat4& GetProjection();
 
         void SetClearColor(float r, float g, float b);
         void SetPrimaryCamera(Camera& camera);

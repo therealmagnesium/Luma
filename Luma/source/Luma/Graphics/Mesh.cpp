@@ -1,7 +1,9 @@
 #include "Luma/Graphics/Mesh.h"
 #include "Luma/Graphics/RenderCommand.h"
+#include "Luma/Graphics/Renderer.h"
 #include "Luma/Graphics/Shader.h"
 
+#include "Luma/Core/Application.h"
 #include "Luma/Core/Log.h"
 
 namespace Luma
@@ -85,18 +87,31 @@ namespace Luma
 
         void DestroyMesh(Mesh& mesh)
         {
-            INFO("Destorying mesh with ID %d", mesh.vertexArray);
+            if (mesh.vertexArray != 0)
+            {
+                INFO("Destorying mesh with ID %d", mesh.vertexArray);
+                DestroyVertexArray(mesh.vertexArray);
+                DestroyBuffer(mesh.vertexBuffer);
+                DestroyBuffer(mesh.indexBuffer);
 
-            DestroyVertexArray(mesh.vertexArray);
-            DestroyBuffer(mesh.vertexBuffer);
-            DestroyBuffer(mesh.indexBuffer);
+                mesh.vertexArray = 0;
+                mesh.vertexBuffer = 0;
+                mesh.indexBuffer = 0;
+            }
         }
 
         void DrawMesh(Mesh& mesh, const glm::mat4& transform, Material& material)
         {
-            if (material.shader != NULL)
+            Core::ApplicationConfig& appInfo = Core::GetApplicationInfo();
+            const float aspectRatio = appInfo.windowWidth / (float)appInfo.windowHeight;
+
+            if (material.shader != NULL && GetPrimaryCamera() != NULL)
             {
+                BindShader(*material.shader);
+
                 SetShaderUniform(*material.shader, "modelMatrix", (void*)&transform, SHADER_UNIFORM_MAT4);
+                SetShaderUniform(*material.shader, "viewMatrix", &GetPrimaryCamera()->view, SHADER_UNIFORM_MAT4);
+                SetShaderUniform(*material.shader, "projectionMatrix", (void*)&GetProjection(), SHADER_UNIFORM_MAT4);
                 SetShaderUniform(*material.shader, "material.albedo", &material.albedo, SHADER_UNIFORM_VEC3);
                 SetShaderUniform(*material.shader, "material.albedoTexture", 0, SHADER_UNIFORM_INT);
 
@@ -110,6 +125,8 @@ namespace Luma
 
                 UnbindIndexBuffer();
                 UnbindVertexArray();
+
+                UnbindShader();
             }
         }
 

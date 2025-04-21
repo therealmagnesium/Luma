@@ -70,12 +70,18 @@ namespace Luma
 
         void UnloadShader(Shader& shader)
         {
-            INFO("Unloading shader [%s, %s]...",   //
-                 shader.source.vertexPath.c_str(), //
-                 shader.source.fragmentPath.c_str());
+            if (shader.id != 0)
+            {
+                INFO("Unloading shader [%s, %s]...",   //
+                     shader.source.vertexPath.c_str(), //
+                     shader.source.fragmentPath.c_str());
 
-            UnbindShader();
-            glDeleteProgram(shader.id);
+                UnbindShader();
+                glDeleteProgram(shader.id);
+                shader.id = 0;
+            }
+            else
+                WARN("DUMBASS");
         }
 
         void BindShader(Shader& shader)
