@@ -8,10 +8,6 @@ namespace Luma
 {
     namespace Graphics
     {
-        u32 TextureFormatToGL(TextureFormat format);
-        u32 TextureFormatToGLInternal(TextureFormat format, bool applyGamma);
-        u32 TextureFormatToGLSize(TextureFormat format);
-
         Texture LoadEmptyTexture(TextureFormat format, u32 width, u32 height)
         {
             Texture texture;
@@ -27,9 +23,7 @@ namespace Luma
 
             glBindTexture(GL_TEXTURE_2D, texture.id);
 
-            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
             glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, texture.width, texture.height, 0, glFormat, glSize, NULL);

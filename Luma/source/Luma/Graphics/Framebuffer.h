@@ -30,6 +30,7 @@ namespace Luma
         void BindFramebuffer(Framebuffer& framebuffer);
         void UnbindFramebuffer();
         void AddFramebufferAttachment(Framebuffer& framebuffer, FramebufferAttachmentType type);
+        void ResizeFramebuffer(Framebuffer& framebuffer, u32 width, u32 height);
         void ValidateFramebuffer(Framebuffer& framebuffer);
     }
 }

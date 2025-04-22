@@ -5,6 +5,8 @@
 #include "Luma/Core/Input.h"
 #include "Luma/Core/Log.h"
 
+#include "Luma/UI/UI.h"
+
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_video.h>
 #include <glad/glad.h>
@@ -63,6 +65,8 @@ namespace Luma
 
             while (SDL_PollEvent(&event))
             {
+                UI::HandleEvents(&event);
+
                 switch (event.type)
                 {
                     case SDL_EVENT_QUIT:
@@ -107,8 +111,7 @@ namespace Luma
                         config.windowWidth = window.width;
                         config.windowHeight = window.height;
 
-                        RenderCommand::SetViewport(window.width, window.height);
-                        //  INFO("Resized window \"%s\" to %dx%d", window.title.c_str(), window.width, window.height);
+                        //   INFO("Resized window \"%s\" to %dx%d", window.title.c_str(), window.width, window.height);
                     }
                 }
             }

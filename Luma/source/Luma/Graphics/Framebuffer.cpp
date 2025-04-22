@@ -72,6 +72,37 @@ namespace Luma
             framebuffer.attachments.push_back(texture);
         }
 
+        void ResizeFramebuffer(Framebuffer& framebuffer, u32 width, u32 height)
+        {
+            for (Texture& attachment : framebuffer.attachments)
+            {
+                u32 glSize = TextureFormatToGLSize(attachment.format);
+                u32 glFormat = TextureFormatToGL(attachment.format);
+                u32 internalFormat = TextureFormatToGLInternal(attachment.format, false);
+                u32 attachmentType = 0;
+
+                switch (attachment.format)
+                {
+                    case TEXTURE_FORMAT_RGB:
+                        attachmentType = GL_COLOR_ATTACHMENT0 + framebuffer.numColorAttachments;
+                        break;
+                    case TEXTURE_FORMAT_DEPTH_STENCIL:
+                        attachmentType = GL_DEPTH_STENCIL_ATTACHMENT;
+                        break;
+
+                    default:
+                        break;
+                }
+
+                glBindTexture(GL_TEXTURE_2D, attachment.id);
+                glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, glFormat, glSize, NULL);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+                glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, GL_TEXTURE_2D, attachment.id, 0);
+            }
+        }
+
         void ValidateFramebuffer(Framebuffer& framebuffer)
         {
             BindFramebuffer(framebuffer);

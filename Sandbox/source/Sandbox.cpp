@@ -1,13 +1,17 @@
 #include "Sandbox.h"
+#include "Panels/SceneViewportPanel.h"
 
 #include <Luma.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glad/glad.h>
 
+#include <imgui.h>
+
 using namespace Luma;
 using namespace Luma::Core;
 using namespace Luma::Graphics;
+using namespace Luma::UI;
 
 static SandboxState state;
 static u32 framebuffer = 0;
@@ -47,10 +51,6 @@ void Sandbox_OnCreate()
     state.sun.direction = glm::vec3(-0.2f, -1.f, -0.3f);
     state.sun.intensity = 2.f;
     state.sun.color = glm::vec3(0.9f, 0.8f, 0.7f);
-
-    state.framebufferMaterial = LoadMaterialDefault();
-    state.framebufferMaterial.albedoTexture = &state.framebuffer.attachments[0];
-    state.framebufferMaterial.shader = state.framebufferShader;
 
     state.materials[0] = LoadMaterialDefault();
     state.materials[0].albedoTexture = &state.textures[0];
@@ -95,12 +95,14 @@ void Sandbox_OnRender()
     DrawMesh(state.cubeMesh, glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.7f, 0.f)), state.materials[0]);
     DrawMesh(state.cubeMesh, glm::scale(glm::mat4(1.f), glm::vec3(7.f, 0.2f, 7.f)), state.materials[1]);
     UnbindFramebuffer();
-
-    DrawMesh(state.quadMesh, glm::mat4(1.f), state.framebufferMaterial);
 }
 
 void Sandbox_OnRenderUI()
 {
+    ImGui::DockSpaceOverViewport();
+
+    ImGui::ShowDemoWindow();
+    DisplaySceneViewport(state.framebuffer);
 }
 
 void Sandbox_OnShutdown()

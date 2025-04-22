@@ -21,7 +21,6 @@ struct SandboxState
     Mesh quadMesh;
     Mesh cubeMesh;
 
-    Material framebufferMaterial;
     Material materials[2];
     Texture textures[2];
 };

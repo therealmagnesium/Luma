@@ -18,3 +18,5 @@
 #include "Luma/Graphics/Shader.h"
 #include "Luma/Graphics/Texture.h"
 #include "Luma/Graphics/Window.h"
+
+#include "Luma/UI/UI.h"

@@ -44,7 +44,9 @@ namespace Luma
 
             UnloadShader(state.defaultShader);
             UnloadShader(state.uvShader);
-            DestroyWindow(state.window);
+            UnloadShader(state.normalShader);
+            UnloadShader(state.phongShader);
+            UnloadShader(state.framebufferShader);
         }
 
         void RendererBegin()

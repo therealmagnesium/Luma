@@ -6,6 +6,8 @@
 #include "Luma/Graphics/Renderer.h"
 #include "Luma/Graphics/Window.h"
 
+#include "Luma/UI/UI.h"
+
 #include <time.h>
 
 namespace Luma
@@ -32,6 +34,7 @@ namespace Luma
 
             TimeStateInitialize(60);
             Graphics::RendererInit();
+            UI::SetupContext();
 
             isInitialized = true;
             INFO("%s", "The application was initialized successfully");
@@ -55,8 +58,15 @@ namespace Luma
 
                 Graphics::RendererBegin();
 
-                Graphics::RenderCommand::Clear(V3_OPEN(clearColor));
+                Graphics::RendererClear(V3_OPEN(clearColor));
+
+                UI::BeginFrome();
+                state.handle->OnRenderUI();
+                UI::EndFrame();
+
                 state.handle->OnRender();
+
+                UI::Display();
 
                 Graphics::RendererEnd();
             }
@@ -68,6 +78,7 @@ namespace Luma
             printf("============================================ Core Program Ends "
                    "=============================================\n");
             Graphics::RendererShutdown();
+            UI::DestroyContext();
         }
 
         void QuitApplication()
