@@ -29,7 +29,7 @@ vec3 GetObjectColor()
     vec3 color = material.albedo;    
     vec3 texel = texture(material.albedoTexture, fragTexCoord).xyz;
 
-    vec3 result = texel* color;
+    vec3 result = texel * color;
     return result;
 }
 
@@ -60,7 +60,7 @@ vec3 CalculateDirectionalLighting(vec3 N)
     float kD = CalculateDiffuse(N, L);
     float kS = CalculateSpecular(N, L, V);
 
-    vec3 result = (kD + kS) * sun.intensity * GetObjectColor();
+    vec3 result = (kD + kS) * sun.intensity * sun.color * GetObjectColor();
     return result;
 }
 
