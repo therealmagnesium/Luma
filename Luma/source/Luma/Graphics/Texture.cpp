@@ -8,6 +8,39 @@ namespace Luma
 {
     namespace Graphics
     {
+        u32 TextureFormatToGL(TextureFormat format);
+        u32 TextureFormatToGLInternal(TextureFormat format, bool applyGamma);
+        u32 TextureFormatToGLSize(TextureFormat format);
+
+        Texture LoadEmptyTexture(TextureFormat format, u32 width, u32 height)
+        {
+            Texture texture;
+            texture.format = format;
+            texture.width = width;
+            texture.height = height;
+
+            glGenTextures(1, &texture.id);
+
+            u32 glFormat = TextureFormatToGL(texture.format);
+            u32 internalFormat = TextureFormatToGLInternal(texture.format, false);
+            u32 glSize = TextureFormatToGLSize(texture.format);
+
+            glBindTexture(GL_TEXTURE_2D, texture.id);
+
+            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, texture.width, texture.height, 0, glFormat, glSize, NULL);
+            glGenerateMipmap(GL_TEXTURE_2D);
+
+            glBindTexture(GL_TEXTURE_2D, 0);
+
+            INFO("Empty texture loaded successfully with an ID of %d", texture.id);
+            return texture;
+        }
+
         Texture LoadTexture(const char* path)
         {
             Texture texture;
@@ -39,7 +72,7 @@ namespace Luma
             }
 
             u32 glFormat = TextureFormatToGL(texture.format);
-            u32 internalFormat = TextureFormatToGLInternal(texture.format);
+            u32 internalFormat = TextureFormatToGLInternal(texture.format, true);
 
             glBindTexture(GL_TEXTURE_2D, texture.id);
 
@@ -60,10 +93,9 @@ namespace Luma
             return texture;
         }
 
-        void BindTexture(Texture& texture, u8 slot)
+        void BindTexture(Texture& texture)
         {
             glBindTexture(GL_TEXTURE_2D, texture.id);
-            glActiveTexture(GL_TEXTURE0 + slot);
         }
 
         void UnbindTexture()
@@ -80,12 +112,19 @@ namespace Luma
                 case TEXTURE_FORMAT_RGB:
                     glFormat = GL_RGB;
                     break;
+
                 case TEXTURE_FORMAT_RGBA:
                     glFormat = GL_RGBA;
                     break;
+
                 case TEXTURE_FORMAT_RED:
                     glFormat = GL_RED;
                     break;
+
+                case TEXTURE_FORMAT_DEPTH_STENCIL:
+                    glFormat = GL_DEPTH_STENCIL;
+                    break;
+
                 default:
                     break;
             }
@@ -93,26 +132,61 @@ namespace Luma
             return glFormat;
         }
 
-        u32 TextureFormatToGLInternal(TextureFormat format)
+        u32 TextureFormatToGLInternal(TextureFormat format, bool applyGamma)
         {
             u32 glFormat = 0;
 
             switch (format)
             {
                 case TEXTURE_FORMAT_RGB:
-                    glFormat = GL_SRGB;
+                    glFormat = (applyGamma) ? GL_SRGB : GL_RGB;
                     break;
+
                 case TEXTURE_FORMAT_RGBA:
-                    glFormat = GL_SRGB_ALPHA;
+                    glFormat = (applyGamma) ? GL_SRGB_ALPHA : GL_RGBA;
                     break;
+
                 case TEXTURE_FORMAT_RED:
                     glFormat = GL_RED;
                     break;
+
+                case TEXTURE_FORMAT_DEPTH_STENCIL:
+                    glFormat = GL_DEPTH24_STENCIL8;
+                    break;
+
                 default:
                     break;
             }
 
             return glFormat;
+        }
+
+        u32 TextureFormatToGLSize(TextureFormat format)
+        {
+            u32 glSize = 0;
+            switch (format)
+            {
+                case TEXTURE_FORMAT_RGB:
+                    glSize = GL_UNSIGNED_BYTE;
+                    break;
+
+                case TEXTURE_FORMAT_RGBA:
+                    glSize = GL_UNSIGNED_BYTE;
+                    break;
+
+                case TEXTURE_FORMAT_DEPTH:
+                    glSize = GL_UNSIGNED_INT;
+                    break;
+
+                case TEXTURE_FORMAT_DEPTH_STENCIL:
+                    glSize = GL_UNSIGNED_INT_24_8;
+                    break;
+
+                default:
+                    break;
+            }
+
+            return glSize;
         }
     }
 }

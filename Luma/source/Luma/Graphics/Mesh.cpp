@@ -31,10 +31,10 @@ namespace Luma
         Mesh GenMeshQuad()
         {
             Vertex vertices[] = {
-                (Vertex){glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec2(0.f, 0.f), glm::vec3(0.f, 0.f, 1.f)}, // bottom left
-                (Vertex){glm::vec3(0.5f, -0.5f, 0.0f), glm::vec2(1.f, 0.f), glm::vec3(0.f, 0.f, 1.f)},  // bottom right
-                (Vertex){glm::vec3(0.5f, 0.5f, 0.0f), glm::vec2(1.f, 1.f), glm::vec3(0.f, 0.f, 1.f)},   // top right
-                (Vertex){glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec2(0.f, 1.f), glm::vec3(0.f, 0.f, 1.f)}   // top left
+                (Vertex){glm::vec3(-1.f, -1.f, 0.0f), glm::vec2(0.f, 0.f), glm::vec3(0.f, 0.f, 1.f)}, // bottom left
+                (Vertex){glm::vec3(1.f, -1.f, 0.0f), glm::vec2(1.f, 0.f), glm::vec3(0.f, 0.f, 1.f)},  // bottom right
+                (Vertex){glm::vec3(1.f, 1.f, 0.0f), glm::vec2(1.f, 1.f), glm::vec3(0.f, 0.f, 1.f)},   // top right
+                (Vertex){glm::vec3(-1.f, 1.f, 0.0f), glm::vec2(0.f, 1.f), glm::vec3(0.f, 0.f, 1.f)}   // top left
             };
 
             u32 indices[] = {
@@ -103,7 +103,6 @@ namespace Luma
         void DrawMesh(Mesh& mesh, const glm::mat4& transform, Material& material)
         {
             Core::ApplicationConfig& appInfo = Core::GetApplicationInfo();
-            const float aspectRatio = appInfo.windowWidth / (float)appInfo.windowHeight;
             const u32 albedoTextureSlot = 0;
 
             if (material.shader != NULL && GetPrimaryCamera() != NULL)
@@ -118,13 +117,12 @@ namespace Luma
                 SetShaderUniform(*material.shader, "normalMatrix", &normalMatrix, SHADER_UNIFORM_MAT4);
                 SetShaderUniform(*material.shader, "viewWorldPosition", &GetPrimaryCamera()->position,
                                  SHADER_UNIFORM_VEC3);
-                SetShaderUniform(*material.shader, "material.albedo", &material.albedo, SHADER_UNIFORM_VEC3);
+                SetShaderUniform(*material.shader, "albedo", &material.albedo, SHADER_UNIFORM_VEC3);
 
                 if (material.albedoTexture != NULL)
                 {
-                    SetShaderUniform(*material.shader, "material.albedoTexture", (void*)&albedoTextureSlot,
-                                     SHADER_UNIFORM_INT);
-                    BindTexture(*material.albedoTexture, albedoTextureSlot);
+                    SetShaderUniform(*material.shader, "albedoTexture", (void*)&albedoTextureSlot, SHADER_UNIFORM_INT);
+                    BindTexture(*material.albedoTexture);
                 }
 
                 BindVertexArray(mesh.vertexArray);

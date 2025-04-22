@@ -15,6 +15,7 @@ namespace Luma
             Shader uvShader;
             Shader normalShader;
             Shader phongShader;
+            Shader framebufferShader;
             Window window;
             Camera* primaryCamera = NULL;
             glm::vec3 clearColor = glm::vec3(1.f);
@@ -31,6 +32,7 @@ namespace Luma
         Shader& GetUVShader();
         Shader& GetNormalShader();
         Shader& GetPhongShader();
+        Shader& GetFramebufferShader();
         Window& GetMainWindow();
         Camera* GetPrimaryCamera();
         const glm::vec3& GetClearColor();

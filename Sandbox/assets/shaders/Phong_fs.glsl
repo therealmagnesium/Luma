@@ -5,12 +5,6 @@ in vec3 fragWorldPosition;
 in vec2 fragTexCoord;
 in vec3 fragNormal;
 
-struct Material
-{
-    vec3 albedo;
-    sampler2D albedoTexture;
-};
-
 struct DirectionalLight
 {
     float intensity;
@@ -20,14 +14,15 @@ struct DirectionalLight
 
 const float k_ambient = 0.3f;
 
+uniform vec3 albedo;
+uniform sampler2D albedoTexture;
 uniform vec3 viewWorldPosition;
-uniform Material material;
 uniform DirectionalLight sun;
 
 vec3 GetObjectColor()
 {
-    vec3 color = material.albedo;    
-    vec3 texel = texture(material.albedoTexture, fragTexCoord).xyz;
+    vec3 color = albedo;    
+    vec3 texel = texture(albedoTexture, fragTexCoord).xyz;
 
     vec3 result = texel * color;
     return result;

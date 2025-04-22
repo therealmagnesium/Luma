@@ -3,21 +3,33 @@
 #include <Luma.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glad/glad.h>
 
 using namespace Luma;
 using namespace Luma::Core;
 using namespace Luma::Graphics;
 
 static SandboxState state;
+static u32 framebuffer = 0;
+static u32 textureColorBuffer = 0;
+static u32 textureDepthBuffer = 0;
 
 void Sandbox_OnCreate()
 {
+    const ApplicationConfig& appInfo = GetApplicationInfo();
+
     SetClearColor(0.12f, 0.12f, 0.12f);
 
     state.defaultShader = &GetDefaultShader();
     state.uvShader = &GetUVShader();
     state.normalShader = &GetNormalShader();
     state.phongShader = &GetPhongShader();
+    state.framebufferShader = &GetFramebufferShader();
+
+    state.framebuffer = CreateFramebuffer(appInfo.windowWidth, appInfo.windowHeight);
+    AddFramebufferAttachment(state.framebuffer, FB_ATTACHMENT_COLOR);
+    AddFramebufferAttachment(state.framebuffer, FB_ATTACHMENT_DEPTH_STENCIL);
+    ValidateFramebuffer(state.framebuffer);
 
     state.textures[0] = LoadTexture("assets/textures/texture0.png");
     state.textures[1] = LoadTexture("assets/textures/texture2.png");
@@ -34,7 +46,11 @@ void Sandbox_OnCreate()
 
     state.sun.direction = glm::vec3(-0.2f, -1.f, -0.3f);
     state.sun.intensity = 2.f;
-    state.sun.color = glm::vec3(0.9f, 0.8f, 0.6f);
+    state.sun.color = glm::vec3(0.9f, 0.8f, 0.7f);
+
+    state.framebufferMaterial = LoadMaterialDefault();
+    state.framebufferMaterial.albedoTexture = &state.framebuffer.attachments[0];
+    state.framebufferMaterial.shader = state.framebufferShader;
 
     state.materials[0] = LoadMaterialDefault();
     state.materials[0].albedoTexture = &state.textures[0];
@@ -71,10 +87,16 @@ void Sandbox_OnUpdate()
 
 void Sandbox_OnRender()
 {
+    BindFramebuffer(state.framebuffer);
+    RendererClear(V3_OPEN(GetClearColor()));
+
     DrawLight(state.sun, *state.phongShader);
 
     DrawMesh(state.cubeMesh, glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.7f, 0.f)), state.materials[0]);
     DrawMesh(state.cubeMesh, glm::scale(glm::mat4(1.f), glm::vec3(7.f, 0.2f, 7.f)), state.materials[1]);
+    UnbindFramebuffer();
+
+    DrawMesh(state.quadMesh, glm::mat4(1.f), state.framebufferMaterial);
 }
 
 void Sandbox_OnRenderUI()
@@ -83,6 +105,7 @@ void Sandbox_OnRenderUI()
 
 void Sandbox_OnShutdown()
 {
+    DestroyFramebuffer(state.framebuffer);
     DestroyMesh(state.quadMesh);
     DestroyMesh(state.cubeMesh);
 }

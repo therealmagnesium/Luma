@@ -90,6 +90,11 @@ namespace Luma
             return state.phongShader;
         }
 
+        Shader& GetFramebufferShader()
+        {
+            return state.framebufferShader;
+        }
+
         Window& GetMainWindow()
         {
             return state.window;
@@ -128,8 +133,8 @@ namespace Luma
             CreateShaderUniform(state.defaultShader, "modelMatrix");
             CreateShaderUniform(state.defaultShader, "viewMatrix");
             CreateShaderUniform(state.defaultShader, "projectionMatrix");
-            CreateShaderUniform(state.defaultShader, "material.albedo");
-            CreateShaderUniform(state.defaultShader, "material.albedoTexture");
+            CreateShaderUniform(state.defaultShader, "albedo");
+            CreateShaderUniform(state.defaultShader, "albedoTexture");
 
             state.uvShader = LoadShader("assets/shaders/UV_vs.glsl", "assets/shaders/UV_fs.glsl");
             CreateShaderUniform(state.uvShader, "modelMatrix");
@@ -148,11 +153,15 @@ namespace Luma
             CreateShaderUniform(state.phongShader, "projectionMatrix");
             CreateShaderUniform(state.phongShader, "normalMatrix");
             CreateShaderUniform(state.phongShader, "viewWorldPosition");
-            CreateShaderUniform(state.phongShader, "material.albedo");
-            CreateShaderUniform(state.phongShader, "material.albedoTexture");
+            CreateShaderUniform(state.phongShader, "albedo");
+            CreateShaderUniform(state.phongShader, "albedoTexture");
             CreateShaderUniform(state.phongShader, "sun.intensity");
             CreateShaderUniform(state.phongShader, "sun.color");
             CreateShaderUniform(state.phongShader, "sun.direction");
+
+            state.framebufferShader =
+                LoadShader("assets/shaders/Framebuffer_vs.glsl", "assets/shaders/Framebuffer_fs.glsl");
+            CreateShaderUniform(state.framebufferShader, "albedoTexture");
         }
     }
 

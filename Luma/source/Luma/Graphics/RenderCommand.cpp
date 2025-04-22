@@ -11,7 +11,7 @@ namespace Luma
             void Clear(float r, float g, float b)
             {
                 glClearColor(r, g, b, 1.f);
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             }
 
             void SetViewport(u32 width, u32 height)

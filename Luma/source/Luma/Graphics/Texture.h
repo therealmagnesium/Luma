@@ -12,6 +12,8 @@ namespace Luma
             TEXTURE_FORMAT_RGB,
             TEXTURE_FORMAT_RGBA,
             TEXTURE_FORMAT_RED,
+            TEXTURE_FORMAT_DEPTH,
+            TEXTURE_FORMAT_DEPTH_STENCIL,
         };
 
         struct Texture
@@ -24,10 +26,9 @@ namespace Luma
             TextureFormat format = TEXTURE_FORMAT_INVALID;
         };
 
+        Texture LoadEmptyTexture(TextureFormat format, u32 width, u32 height);
         Texture LoadTexture(const char* path);
-        void BindTexture(Texture& texture, u8 slot);
+        void BindTexture(Texture& texture);
         void UnbindTexture();
-        u32 TextureFormatToGL(TextureFormat format);
-        u32 TextureFormatToGLInternal(TextureFormat format);
     }
 }

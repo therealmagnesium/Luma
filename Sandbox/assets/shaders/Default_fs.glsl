@@ -3,18 +3,13 @@ out vec4 finalColor;
 
 in vec2 fragTexCoord;
 
-struct Material
-{
-    vec3 albedo;
-    sampler2D albedoTexture;
-};
-
-uniform Material material;
+uniform vec3 albedo;
+uniform sampler2D albedoTexture;
 
 vec3 GetObjectColor()
 {
-    vec3 color = material.albedo;    
-    vec3 texel = texture(material.albedoTexture, fragTexCoord).xyz;
+    vec3 color = albedo;    
+    vec3 texel = texture(albedoTexture, fragTexCoord).xyz;
 
     return color * texel;
 }

@@ -8,6 +8,7 @@
 #include "Luma/Core/Time.h"
 
 #include "Luma/Graphics/Camera.h"
+#include "Luma/Graphics/Framebuffer.h"
 #include "Luma/Graphics/Lights.h"
 #include "Luma/Graphics/Material.h"
 #include "Luma/Graphics/Mesh.h"
