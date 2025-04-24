@@ -163,6 +163,7 @@ namespace Luma
 
             state.framebufferShader =
                 LoadShader("assets/shaders/Framebuffer_vs.glsl", "assets/shaders/Framebuffer_fs.glsl");
+            CreateShaderUniform(state.framebufferShader, "projectionMatrix");
             CreateShaderUniform(state.framebufferShader, "albedoTexture");
         }
     }

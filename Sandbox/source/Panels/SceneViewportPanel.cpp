@@ -1,11 +1,14 @@
 #include "SceneViewportPanel.h"
-#include <Luma.h>
 
+#include <Luma.h>
 #include <imgui.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace Luma::Core;
 using namespace Luma::Graphics;
 using namespace Luma::UI;
+
+static SceneViewportState state;
 
 ImVec2 GetLargestViewportSize();
 ImVec2 GetCenteredViewportPosition(ImVec2 aspectSize);
@@ -13,6 +16,9 @@ void DrawCallback(const ImDrawList*, const ImDrawCmd*);
 
 void DisplaySceneViewport(Framebuffer& framebuffer, Shader& postProcessingShader)
 {
+    state.framebuffer = &framebuffer;
+    state.postProcessingShader = &postProcessingShader;
+
     ImGui::Begin("Scene Viewport");
 
     ImDrawList* drawList = ImGui::GetWindowDrawList();
@@ -61,4 +67,17 @@ ImVec2 GetCenteredViewportPosition(ImVec2 aspectSize)
 
 void DrawCallback(const ImDrawList*, const ImDrawCmd*)
 {
+    const u32 albedoSlot = 0;
+    const ImDrawData* draw_data = ImGui::GetDrawData();
+    float L = draw_data->DisplayPos.x;
+    float R = draw_data->DisplayPos.x + draw_data->DisplaySize.x;
+    float T = draw_data->DisplayPos.y;
+    float B = draw_data->DisplayPos.y + draw_data->DisplaySize.y;
+
+    const glm::mat4 projection = glm::ortho(L, R, B, T);
+
+    BindShader(*state.postProcessingShader);
+    BindTexture(state.framebuffer->attachments[0]);
+    SetShaderUniform(*state.postProcessingShader, "albedoTexture", (void*)&albedoSlot, SHADER_UNIFORM_INT);
+    SetShaderUniform(*state.postProcessingShader, "projectionMatrix", (void*)&projection, SHADER_UNIFORM_MAT4);
 }
