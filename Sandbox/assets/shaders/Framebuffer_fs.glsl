@@ -8,6 +8,6 @@ uniform sampler2D albedoTexture;
 void main()
 {    
     vec3 texel = texture(albedoTexture, fragTexCoord).xyz;
-    vec3 color = vec3(1.f) - texel;
+    vec3 color = texel;
     finalColor = vec4(color, 1.f);
 }

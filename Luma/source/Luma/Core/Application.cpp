@@ -77,13 +77,13 @@ namespace Luma
 
             printf("============================================ Core Program Ends "
                    "=============================================\n");
+            INFO("%s", "Quitting the application...");
             Graphics::RendererShutdown();
             UI::DestroyContext();
         }
 
         void QuitApplication()
         {
-            INFO("%s", "Quitting the application...");
             state.isRunning = false;
         }
 

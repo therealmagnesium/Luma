@@ -8,10 +8,16 @@ uniform sampler2D albedoTexture;
 
 vec3 GetObjectColor()
 {
-    vec3 color = albedo;    
-    vec3 texel = texture(albedoTexture, fragTexCoord).xyz;
+    vec3 result = albedo;
 
-    return color * texel;
+    if (textureSize(albedoTexture, 0).x > 1.f)
+    {
+        vec3 texel = texture(albedoTexture, fragTexCoord).xyz;
+        result *= texel;
+        return result;
+    }
+
+    return result;
 }
 
 void main()

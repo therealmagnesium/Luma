@@ -21,10 +21,15 @@ uniform DirectionalLight sun;
 
 vec3 GetObjectColor()
 {
-    vec3 color = albedo;    
-    vec3 texel = texture(albedoTexture, fragTexCoord).xyz;
+    vec3 result = albedo;
 
-    vec3 result = texel * color;
+    if (textureSize(albedoTexture, 0).x > 1.f)
+    {
+        vec3 texel = texture(albedoTexture, fragTexCoord).xyz;
+        result *= texel;
+        return result;
+    }
+
     return result;
 }
 

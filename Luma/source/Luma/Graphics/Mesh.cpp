@@ -6,6 +6,8 @@
 #include "Luma/Core/Application.h"
 #include "Luma/Core/Log.h"
 
+#include <glad/glad.h>
+
 namespace Luma
 {
     namespace Graphics
@@ -118,12 +120,12 @@ namespace Luma
                 SetShaderUniform(*material.shader, "viewWorldPosition", &GetPrimaryCamera()->position,
                                  SHADER_UNIFORM_VEC3);
                 SetShaderUniform(*material.shader, "albedo", &material.albedo, SHADER_UNIFORM_VEC3);
+                SetShaderUniform(*material.shader, "albedoTexture", (void*)&albedoTextureSlot, SHADER_UNIFORM_INT);
 
                 if (material.albedoTexture != NULL)
-                {
-                    SetShaderUniform(*material.shader, "albedoTexture", (void*)&albedoTextureSlot, SHADER_UNIFORM_INT);
                     BindTexture(*material.albedoTexture);
-                }
+                else
+                    BindTexture((Texture){.id = 0});
 
                 BindVertexArray(mesh.vertexArray);
                 BindIndexBuffer(mesh.indexBuffer);

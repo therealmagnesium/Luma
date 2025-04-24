@@ -80,8 +80,6 @@ namespace Luma
                 glDeleteProgram(shader.id);
                 shader.id = 0;
             }
-            else
-                WARN("DUMBASS");
         }
 
         void BindShader(Shader& shader)

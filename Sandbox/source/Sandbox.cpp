@@ -45,7 +45,7 @@ void Sandbox_OnCreate()
     state.camera.position = glm::vec3(0.f, 2.f, 5.f);
     state.camera.target = glm::vec3(0.f);
     state.camera.up = glm::vec3(0.f, 1.f, 0.f);
-    state.camera.moveSpeed = 0.15f;
+    state.camera.moveSpeed = 0.25f;
     state.camera.lookSensitivity = 7.f;
     SetPrimaryCamera(state.camera);
 
@@ -54,11 +54,13 @@ void Sandbox_OnCreate()
     state.sun.color = glm::vec3(0.9f, 0.8f, 0.7f);
 
     state.materials[0] = LoadMaterialDefault();
-    state.materials[0].albedoTexture = &state.textures[0];
+    state.materials[0].albedo = glm::vec3(0.2f, 0.4f, 0.8f);
+    state.materials[0].albedoTexture = NULL;
     state.materials[0].shader = state.phongShader;
 
     state.materials[1] = LoadMaterialDefault();
-    state.materials[1].albedoTexture = &state.textures[1];
+    state.materials[1].albedo = glm::vec3(0.4f, 0.8f, 0.2f);
+    state.materials[1].albedoTexture = NULL;
     state.materials[1].shader = state.phongShader;
 
     state.framebufferMaterial = LoadMaterialDefault();
@@ -119,6 +121,7 @@ void Sandbox_OnRenderUI()
 void Sandbox_OnShutdown()
 {
     DestroyFramebuffer(state.framebuffer);
+    DestroyFramebuffer(state.framebufferIntermediate);
     DestroyMesh(state.quadMesh);
     DestroyMesh(state.cubeMesh);
 }
