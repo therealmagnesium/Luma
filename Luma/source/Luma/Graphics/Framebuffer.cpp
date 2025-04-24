@@ -10,6 +10,8 @@ namespace Luma
 {
     namespace Graphics
     {
+        u32 FramebufferTypeToGL(FramebufferType type);
+
         Framebuffer CreateFramebuffer(u32 width, u32 height)
         {
             Framebuffer framebuffer;
@@ -32,17 +34,19 @@ namespace Luma
             }
         }
 
-        void BindFramebuffer(Framebuffer& framebuffer)
+        void BindFramebuffer(const Framebuffer& framebuffer, FramebufferType type)
         {
-            glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.id);
+            u32 glType = FramebufferTypeToGL(type);
+            glBindFramebuffer(glType, framebuffer.id);
         }
 
-        void UnbindFramebuffer()
+        void UnbindFramebuffer(FramebufferType type)
         {
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            u32 glType = FramebufferTypeToGL(type);
+            glBindFramebuffer(glType, 0);
         }
 
-        void AddFramebufferAttachment(Framebuffer& framebuffer, FramebufferAttachmentType type)
+        void AddFramebufferAttachment(Framebuffer& framebuffer, FramebufferAttachmentType type, bool isMultisampled)
         {
             TextureFormat textureFormat = TEXTURE_FORMAT_INVALID;
             u32 glType = 0;
@@ -64,24 +68,42 @@ namespace Luma
                     break;
             }
 
-            BindFramebuffer(framebuffer);
-            Texture texture = LoadEmptyTexture(textureFormat, framebuffer.width, framebuffer.height);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, glType, GL_TEXTURE_2D, texture.id, 0);
-            UnbindFramebuffer();
+            BindFramebuffer(framebuffer, FB_READ_WRITE);
 
-            framebuffer.attachments.push_back(texture);
+            TextureSpecification textureSpec;
+            textureSpec.width = framebuffer.width;
+            textureSpec.height = framebuffer.height;
+            textureSpec.format = textureFormat;
+
+            if (isMultisampled)
+            {
+                Texture texture = LoadEmptyTextureMultisampled(textureSpec, 4);
+                BindTexture(texture);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, glType, GL_TEXTURE_2D_MULTISAMPLE, texture.id, 0);
+                framebuffer.attachments.push_back(texture);
+            }
+            else
+            {
+                Texture texture = LoadEmptyTexture(textureSpec);
+                BindTexture(texture);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, glType, GL_TEXTURE_2D, texture.id, 0);
+                framebuffer.attachments.push_back(texture);
+            }
+
+            UnbindFramebuffer(FB_READ_WRITE);
+            UnbindTexture();
         }
 
         void ResizeFramebuffer(Framebuffer& framebuffer, u32 width, u32 height)
         {
             for (Texture& attachment : framebuffer.attachments)
             {
-                u32 glSize = TextureFormatToGLSize(attachment.format);
-                u32 glFormat = TextureFormatToGL(attachment.format);
-                u32 internalFormat = TextureFormatToGLInternal(attachment.format, false);
+                u32 glSize = TextureFormatToGLSize(attachment.specification.format);
+                u32 glFormat = TextureFormatToGL(attachment.specification.format);
+                u32 internalFormat = TextureFormatToGLInternal(attachment.specification.format, false);
                 u32 attachmentType = 0;
 
-                switch (attachment.format)
+                switch (attachment.specification.format)
                 {
                     case TEXTURE_FORMAT_RGB:
                         attachmentType = GL_COLOR_ATTACHMENT0 + framebuffer.numColorAttachments;
@@ -103,15 +125,50 @@ namespace Luma
             }
         }
 
+        void CopyFramebuffer(const Framebuffer& source, const Framebuffer& dest)
+        {
+            BindFramebuffer(source, FB_READ);
+            BindFramebuffer(dest, FB_WRITE);
+            glBlitFramebuffer(0, 0, source.width, source.height, 0, 0, dest.width, dest.height, GL_COLOR_BUFFER_BIT,
+                              GL_NEAREST);
+            UnbindFramebuffer(FB_READ);
+            UnbindFramebuffer(FB_WRITE);
+        }
+
         void ValidateFramebuffer(Framebuffer& framebuffer)
         {
-            BindFramebuffer(framebuffer);
+            BindFramebuffer(framebuffer, FB_READ_WRITE);
 
             if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
                 ERROR("Framebuffer with an ID of %d, or one of it's attachments were not created successfully",
                       framebuffer.id);
 
-            UnbindFramebuffer();
+            UnbindFramebuffer(FB_READ_WRITE);
+        }
+
+        u32 FramebufferTypeToGL(FramebufferType type)
+        {
+            u32 glType = 0;
+
+            switch (type)
+            {
+                case FB_READ:
+                    glType = GL_READ_FRAMEBUFFER;
+                    break;
+
+                case FB_WRITE:
+                    glType = GL_DRAW_FRAMEBUFFER;
+                    break;
+
+                case FB_READ_WRITE:
+                    glType = GL_FRAMEBUFFER;
+                    break;
+
+                default:
+                    break;
+            }
+
+            return glType;
         }
     }
 }

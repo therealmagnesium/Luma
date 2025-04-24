@@ -14,9 +14,6 @@ using namespace Luma::Graphics;
 using namespace Luma::UI;
 
 static SandboxState state;
-static u32 framebuffer = 0;
-static u32 textureColorBuffer = 0;
-static u32 textureDepthBuffer = 0;
 
 void Sandbox_OnCreate()
 {
@@ -31,9 +28,13 @@ void Sandbox_OnCreate()
     state.framebufferShader = &GetFramebufferShader();
 
     state.framebuffer = CreateFramebuffer(appInfo.windowWidth, appInfo.windowHeight);
-    AddFramebufferAttachment(state.framebuffer, FB_ATTACHMENT_COLOR);
-    AddFramebufferAttachment(state.framebuffer, FB_ATTACHMENT_DEPTH_STENCIL);
+    AddFramebufferAttachment(state.framebuffer, FB_ATTACHMENT_COLOR, true);
+    AddFramebufferAttachment(state.framebuffer, FB_ATTACHMENT_DEPTH_STENCIL, true);
     ValidateFramebuffer(state.framebuffer);
+
+    state.framebufferIntermediate = CreateFramebuffer(appInfo.windowWidth, appInfo.windowHeight);
+    AddFramebufferAttachment(state.framebufferIntermediate, FB_ATTACHMENT_COLOR, false);
+    ValidateFramebuffer(state.framebufferIntermediate);
 
     state.textures[0] = LoadTexture("assets/textures/texture0.png");
     state.textures[1] = LoadTexture("assets/textures/texture2.png");
@@ -45,7 +46,7 @@ void Sandbox_OnCreate()
     state.camera.target = glm::vec3(0.f);
     state.camera.up = glm::vec3(0.f, 1.f, 0.f);
     state.camera.moveSpeed = 0.15f;
-    state.camera.lookSensitivity = 3.f;
+    state.camera.lookSensitivity = 7.f;
     SetPrimaryCamera(state.camera);
 
     state.sun.direction = glm::vec3(-0.2f, -1.f, -0.3f);
@@ -59,6 +60,10 @@ void Sandbox_OnCreate()
     state.materials[1] = LoadMaterialDefault();
     state.materials[1].albedoTexture = &state.textures[1];
     state.materials[1].shader = state.phongShader;
+
+    state.framebufferMaterial = LoadMaterialDefault();
+    state.framebufferMaterial.shader = state.framebufferShader;
+    state.framebufferMaterial.albedoTexture = &state.framebufferIntermediate.attachments[0];
 }
 
 void Sandbox_OnUpdate()
@@ -87,14 +92,20 @@ void Sandbox_OnUpdate()
 
 void Sandbox_OnRender()
 {
-    BindFramebuffer(state.framebuffer);
+    RenderCommand::WriteToDepth(true);
+
+    BindFramebuffer(state.framebuffer, FB_READ_WRITE);
     RendererClear(V3_OPEN(GetClearColor()));
 
     DrawLight(state.sun, *state.phongShader);
 
     DrawMesh(state.cubeMesh, glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.7f, 0.f)), state.materials[0]);
     DrawMesh(state.cubeMesh, glm::scale(glm::mat4(1.f), glm::vec3(7.f, 0.2f, 7.f)), state.materials[1]);
-    UnbindFramebuffer();
+
+    CopyFramebuffer(state.framebuffer, state.framebufferIntermediate);
+    UnbindFramebuffer(FB_READ_WRITE);
+
+    RenderCommand::WriteToDepth(false);
 }
 
 void Sandbox_OnRenderUI()
@@ -102,7 +113,7 @@ void Sandbox_OnRenderUI()
     ImGui::DockSpaceOverViewport();
 
     ImGui::ShowDemoWindow();
-    DisplaySceneViewport(state.framebuffer);
+    DisplaySceneViewport(state.framebufferIntermediate, *state.framebufferShader);
 }
 
 void Sandbox_OnShutdown()

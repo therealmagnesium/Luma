@@ -9,10 +9,14 @@ using namespace Luma::UI;
 
 ImVec2 GetLargestViewportSize();
 ImVec2 GetCenteredViewportPosition(ImVec2 aspectSize);
+void DrawCallback(const ImDrawList*, const ImDrawCmd*);
 
-void DisplaySceneViewport(Framebuffer& framebuffer)
+void DisplaySceneViewport(Framebuffer& framebuffer, Shader& postProcessingShader)
 {
     ImGui::Begin("Scene Viewport");
+
+    ImDrawList* drawList = ImGui::GetWindowDrawList();
+    drawList->AddCallback(DrawCallback, NULL);
 
     ImVec2 aspectSize = GetLargestViewportSize();
     ImVec2 windowPosition = GetCenteredViewportPosition(aspectSize);
@@ -22,6 +26,8 @@ void DisplaySceneViewport(Framebuffer& framebuffer)
 
     ImGui::SetCursorPos(windowPosition);
     ImGui::Image((u64)framebuffer.attachments[0].id, aspectSize, ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
+
+    drawList->AddCallback(ImDrawCallback_ResetRenderState, NULL);
     ImGui::End();
 }
 
@@ -51,4 +57,8 @@ ImVec2 GetCenteredViewportPosition(ImVec2 aspectSize)
     viewportPosition.y = (windowSize.y / 2.f) - (aspectSize.y / 2.f);
 
     return viewportPosition;
+}
+
+void DrawCallback(const ImDrawList*, const ImDrawCmd*)
+{
 }

@@ -25,8 +25,6 @@ namespace Luma
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
             SDL_GL_SetSwapInterval(1);
 
             window.handle = SDL_CreateWindow(title, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
@@ -38,12 +36,7 @@ namespace Luma
 
             gladLoadGL();
 
-            glEnable(GL_DEPTH_TEST);
-            glEnable(GL_BLEND);
-            glEnable(GL_MULTISAMPLE);
             glEnable(GL_CULL_FACE);
-
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
             INFO("Window \"%s\" was successfully created with an OpenGL context", window.title.c_str());
             INFO("GPU vendor: %s", glGetString(GL_VENDOR));

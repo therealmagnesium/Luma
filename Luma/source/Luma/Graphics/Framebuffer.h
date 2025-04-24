@@ -16,6 +16,14 @@ namespace Luma
             FB_ATTACHMENT_DEPTH_STENCIL,
         };
 
+        enum FramebufferType : s32
+        {
+            FB_INVALID = -1,
+            FB_READ,
+            FB_WRITE,
+            FB_READ_WRITE
+        };
+
         struct Framebuffer
         {
             u32 id = 0;
@@ -27,10 +35,11 @@ namespace Luma
 
         Framebuffer CreateFramebuffer(u32 width, u32 height);
         void DestroyFramebuffer(Framebuffer& framebuffer);
-        void BindFramebuffer(Framebuffer& framebuffer);
-        void UnbindFramebuffer();
-        void AddFramebufferAttachment(Framebuffer& framebuffer, FramebufferAttachmentType type);
+        void BindFramebuffer(const Framebuffer& framebuffer, FramebufferType type);
+        void UnbindFramebuffer(FramebufferType type);
+        void AddFramebufferAttachment(Framebuffer& framebuffer, FramebufferAttachmentType type, bool isMultisampled);
         void ResizeFramebuffer(Framebuffer& framebuffer, u32 width, u32 height);
+        void CopyFramebuffer(const Framebuffer& source, const Framebuffer& dest);
         void ValidateFramebuffer(Framebuffer& framebuffer);
     }
 }

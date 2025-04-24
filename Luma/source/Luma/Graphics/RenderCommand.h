@@ -9,6 +9,7 @@ namespace Luma
         {
             void Clear(float r, float g, float b);
             void SetViewport(u32 width, u32 height);
+            void WriteToDepth(bool enabled);
             void DrawArrays(u32 numIndices);
             void DrawIndexed(u32 numIndices);
         }

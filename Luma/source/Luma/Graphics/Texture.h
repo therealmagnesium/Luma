@@ -16,17 +16,24 @@ namespace Luma
             TEXTURE_FORMAT_DEPTH_STENCIL,
         };
 
-        struct Texture
+        struct TextureSpecification
         {
-            u32 id = 0;
             u32 width = 0;
             u32 height = 0;
-            u32 numChannels = 0;
-            std::string path = "";
             TextureFormat format = TEXTURE_FORMAT_INVALID;
         };
 
-        Texture LoadEmptyTexture(TextureFormat format, u32 width, u32 height);
+        struct Texture
+        {
+            u32 id = 0;
+            u32 numChannels = 0;
+            bool isMultisampled = false;
+            std::string path = "";
+            TextureSpecification specification;
+        };
+
+        Texture LoadEmptyTexture(TextureSpecification& spec);
+        Texture LoadEmptyTextureMultisampled(TextureSpecification& spec, u8 numSamples);
         Texture LoadTexture(const char* path);
         void BindTexture(Texture& texture);
         void UnbindTexture();

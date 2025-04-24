@@ -19,6 +19,11 @@ namespace Luma
                 glViewport(0, 0, width, height);
             }
 
+            void WriteToDepth(bool enabled)
+            {
+                (enabled) ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+            }
+
             void DrawArrays(u32 numIndices)
             {
                 glDrawArrays(GL_TRIANGLES, 0, numIndices);

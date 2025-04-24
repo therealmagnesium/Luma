@@ -8,6 +8,7 @@ using namespace Luma::Graphics;
 struct SandboxState
 {
     Framebuffer framebuffer;
+    Framebuffer framebufferIntermediate;
 
     Shader* defaultShader = NULL;
     Shader* uvShader = NULL;
@@ -21,6 +22,7 @@ struct SandboxState
     Mesh quadMesh;
     Mesh cubeMesh;
 
+    Material framebufferMaterial;
     Material materials[2];
     Texture textures[2];
 };

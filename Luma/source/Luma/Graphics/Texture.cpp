@@ -8,30 +8,51 @@ namespace Luma
 {
     namespace Graphics
     {
-        Texture LoadEmptyTexture(TextureFormat format, u32 width, u32 height)
+        Texture LoadEmptyTexture(TextureSpecification& spec)
         {
             Texture texture;
-            texture.format = format;
-            texture.width = width;
-            texture.height = height;
+            texture.specification.format = spec.format;
+            texture.specification.width = spec.width;
+            texture.specification.height = spec.height;
+            texture.isMultisampled = false;
+
+            u32 glFormat = TextureFormatToGL(texture.specification.format);
+            u32 internalFormat = TextureFormatToGLInternal(texture.specification.format, false);
+            u32 glSize = TextureFormatToGLSize(texture.specification.format);
 
             glGenTextures(1, &texture.id);
-
-            u32 glFormat = TextureFormatToGL(texture.format);
-            u32 internalFormat = TextureFormatToGLInternal(texture.format, false);
-            u32 glSize = TextureFormatToGLSize(texture.format);
-
             glBindTexture(GL_TEXTURE_2D, texture.id);
 
-            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, texture.width, texture.height, 0, glFormat, glSize, NULL);
-            glGenerateMipmap(GL_TEXTURE_2D);
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, spec.width, spec.height, 0, glFormat, glSize, NULL);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
             glBindTexture(GL_TEXTURE_2D, 0);
 
             INFO("Empty texture loaded successfully with an ID of %d", texture.id);
+            return texture;
+        }
+
+        Texture LoadEmptyTextureMultisampled(TextureSpecification& spec, u8 numSamples)
+        {
+            Texture texture;
+            texture.specification.format = spec.format;
+            texture.specification.width = spec.width;
+            texture.specification.height = spec.height;
+            texture.isMultisampled = true;
+
+            glGenTextures(1, &texture.id);
+
+            u32 glFormat = TextureFormatToGL(texture.specification.format);
+            u32 internalFormat = TextureFormatToGLInternal(texture.specification.format, false);
+            u32 glSize = TextureFormatToGLSize(texture.specification.format);
+
+            glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture.id);
+            glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, numSamples, glFormat, spec.width, spec.height, true);
+            glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+
+            INFO("Empty multisampled texture loaded successfully with an ID of %d and %d samples", texture.id,
+                 numSamples);
             return texture;
         }
 
@@ -43,7 +64,8 @@ namespace Luma
             glGenTextures(1, &texture.id);
 
             stbi_set_flip_vertically_on_load(true);
-            u8* data = stbi_load(path, (s32*)&texture.width, (s32*)&texture.height, (s32*)&texture.numChannels, 0);
+            u8* data = stbi_load(path, (s32*)&texture.specification.width, (s32*)&texture.specification.height,
+                                 (s32*)&texture.numChannels, 0);
 
             if (data == NULL)
             {
@@ -55,28 +77,28 @@ namespace Luma
             switch (texture.numChannels)
             {
                 case 1:
-                    texture.format = TEXTURE_FORMAT_RED;
+                    texture.specification.format = TEXTURE_FORMAT_RED;
                     break;
                 case 3:
-                    texture.format = TEXTURE_FORMAT_RGB;
+                    texture.specification.format = TEXTURE_FORMAT_RGB;
                     break;
                 case 4:
-                    texture.format = TEXTURE_FORMAT_RGBA;
+                    texture.specification.format = TEXTURE_FORMAT_RGBA;
                     break;
             }
 
-            u32 glFormat = TextureFormatToGL(texture.format);
-            u32 internalFormat = TextureFormatToGLInternal(texture.format, true);
+            u32 glFormat = TextureFormatToGL(texture.specification.format);
+            u32 internalFormat = TextureFormatToGLInternal(texture.specification.format, true);
 
             glBindTexture(GL_TEXTURE_2D, texture.id);
 
-            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, texture.width, texture.height, 0, glFormat, GL_UNSIGNED_BYTE,
-                         data);
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, texture.specification.width, texture.specification.height, 0,
+                         glFormat, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);
 
             glBindTexture(GL_TEXTURE_2D, 0);
