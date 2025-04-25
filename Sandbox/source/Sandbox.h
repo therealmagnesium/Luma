@@ -18,10 +18,12 @@ struct SandboxState
 
     Camera camera;
     DirectionalLight sun;
+    SpotLight spotlight;
 
     Mesh quadMesh;
     Mesh cubeMesh;
 
+    Material defaultMaterial;
     Material framebufferMaterial;
     Material materials[2];
     Texture textures[2];

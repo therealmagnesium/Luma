@@ -60,14 +60,14 @@ namespace Luma
                 (Vertex){glm::vec3(0.5f, 0.5f, 0.5f), glm::vec2(1.0f, 1.0f), glm::vec3(0.f, 0.f, 1.f)},     // G 6
                 (Vertex){glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(0.f, 0.f, 1.f)},    // H 7
 
-                (Vertex){glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec2(0.0f, 0.0f), glm::vec3(1.f, 0.f, 0.f)},  // D 8
-                (Vertex){glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(1.f, 0.f, 0.f)}, // A 9
-                (Vertex){glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec2(1.0f, 1.0f), glm::vec3(1.f, 0.f, 0.f)},  // E 10
-                (Vertex){glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(1.f, 0.f, 0.f)},   // H 11
-                (Vertex){glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f), glm::vec3(-1.f, 0.f, 0.f)}, // B 12
-                (Vertex){glm::vec3(0.5f, 0.5f, -0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(-1.f, 0.f, 0.f)},  // C 13
-                (Vertex){glm::vec3(0.5f, 0.5f, 0.5f), glm::vec2(1.0f, 1.0f), glm::vec3(-1.f, 0.f, 0.f)},   // G 14
-                (Vertex){glm::vec3(0.5f, -0.5f, 0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(-1.f, 0.f, 0.f)},  // F 15
+                (Vertex){glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec2(0.0f, 0.0f), glm::vec3(-1.f, 0.f, 0.f)},  // D 8
+                (Vertex){glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(-1.f, 0.f, 0.f)}, // A 9
+                (Vertex){glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec2(1.0f, 1.0f), glm::vec3(-1.f, 0.f, 0.f)},  // E 10
+                (Vertex){glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(-1.f, 0.f, 0.f)},   // H 11
+                (Vertex){glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f), glm::vec3(1.f, 0.f, 0.f)},   // B 12
+                (Vertex){glm::vec3(0.5f, 0.5f, -0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(1.f, 0.f, 0.f)},    // C 13
+                (Vertex){glm::vec3(0.5f, 0.5f, 0.5f), glm::vec2(1.0f, 1.0f), glm::vec3(1.f, 0.f, 0.f)},     // G 14
+                (Vertex){glm::vec3(0.5f, -0.5f, 0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(1.f, 0.f, 0.f)},    // F 15
 
                 (Vertex){glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f), glm::vec3(0.f, -1.f, 0.f)}, // A 16
                 (Vertex){glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 0.0f), glm::vec3(0.f, -1.f, 0.f)},  // B 17

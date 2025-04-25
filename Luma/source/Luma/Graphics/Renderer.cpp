@@ -160,6 +160,12 @@ namespace Luma
             CreateShaderUniform(state.phongShader, "sun.intensity");
             CreateShaderUniform(state.phongShader, "sun.color");
             CreateShaderUniform(state.phongShader, "sun.direction");
+            CreateShaderUniform(state.phongShader, "spotlight.intensity");
+            CreateShaderUniform(state.phongShader, "spotlight.cutoff");
+            CreateShaderUniform(state.phongShader, "spotlight.outerCutoff");
+            CreateShaderUniform(state.phongShader, "spotlight.position");
+            CreateShaderUniform(state.phongShader, "spotlight.target");
+            CreateShaderUniform(state.phongShader, "spotlight.color");
 
             state.framebufferShader =
                 LoadShader("assets/shaders/Framebuffer_vs.glsl", "assets/shaders/Framebuffer_fs.glsl");

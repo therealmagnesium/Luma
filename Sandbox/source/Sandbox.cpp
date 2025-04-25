@@ -49,18 +49,26 @@ void Sandbox_OnCreate()
     state.camera.lookSensitivity = 7.f;
     SetPrimaryCamera(state.camera);
 
-    state.sun.direction = glm::vec3(-0.2f, -1.f, -0.3f);
+    state.sun.direction = glm::vec3(-0.2f, -1.f, -0.5f);
     state.sun.intensity = 2.f;
     state.sun.color = glm::vec3(0.9f, 0.8f, 0.7f);
 
+    state.spotlight.position = glm::vec3(0.f, 5.f, 0.f);
+    state.spotlight.target = glm::vec3(0.f);
+    state.spotlight.color = glm::vec3(0.8f, 0.7f, 0.4f);
+    state.spotlight.innerRadius = 15.f;
+    state.spotlight.outerRadius = 20.f;
+
+    state.defaultMaterial = LoadMaterialDefault();
+
     state.materials[0] = LoadMaterialDefault();
-    state.materials[0].albedo = glm::vec3(0.2f, 0.4f, 0.8f);
-    state.materials[0].albedoTexture = NULL;
+    // state.materials[0].albedo = glm::vec3(0.2f, 0.4f, 0.8f);
+    state.materials[0].albedoTexture = &state.textures[0];
     state.materials[0].shader = state.phongShader;
 
     state.materials[1] = LoadMaterialDefault();
-    state.materials[1].albedo = glm::vec3(0.4f, 0.8f, 0.2f);
-    state.materials[1].albedoTexture = NULL;
+    // state.materials[1].albedo = glm::vec3(0.4f, 0.8f, 0.2f);
+    state.materials[1].albedoTexture = &state.textures[1];
     state.materials[1].shader = state.phongShader;
 
     state.framebufferMaterial = LoadMaterialDefault();
@@ -100,6 +108,7 @@ void Sandbox_OnRender()
     RendererClear(V3_OPEN(GetClearColor()));
 
     DrawLight(state.sun, *state.phongShader);
+    DrawLight(state.spotlight, *state.phongShader);
 
     DrawMesh(state.cubeMesh, glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.7f, 0.f)), state.materials[0]);
     DrawMesh(state.cubeMesh, glm::scale(glm::mat4(1.f), glm::vec3(7.f, 0.2f, 7.f)), state.materials[1]);

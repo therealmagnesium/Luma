@@ -36,7 +36,7 @@ links({
 postbuildcommands({
 	"cp -r assets/ %{cfg.buildtarget.directory}",
 	--"cp -r scenes/ %{cfg.buildtarget.directory}",
-	--"cp ../imgui.ini %{cfg.buildtarget.directory}",
+	"cp ../imgui.ini %{cfg.buildtarget.directory}",
 })
 
 filter("system:linux")

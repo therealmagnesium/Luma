@@ -7,7 +7,7 @@ in vec3 fragNormal;
 void main()
 {
     vec3 N = normalize(fragNormal);
-    vec3 color = abs(N);
+    vec3 color = N;
     color = pow(color, vec3(1.f / 2.2f));
     finalColor = vec4(color, 1.f);
 }

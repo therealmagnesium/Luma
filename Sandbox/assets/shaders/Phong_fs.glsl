@@ -12,12 +12,23 @@ struct DirectionalLight
     vec3 direction;
 };
 
+struct SpotLight
+{
+    float intensity;
+    float cutoff;
+    float outerCutoff;
+    vec3 position;
+    vec3 target;
+    vec3 color;
+};
+
 const float k_ambient = 0.3f;
 
 uniform vec3 albedo;
 uniform sampler2D albedoTexture;
 uniform vec3 viewWorldPosition;
 uniform DirectionalLight sun;
+uniform SpotLight spotlight;
 
 vec3 GetObjectColor()
 {
@@ -52,22 +63,45 @@ float CalculateSpecular(vec3 N, vec3 L, vec3 V)
     return kS;
 }
 
-vec3 CalculateDirectionalLighting(vec3 N)
+vec3 CalculateLightInternal(vec3 N, vec3 V, vec3 L)
 {
-    vec3 L = normalize(-sun.direction);
-    vec3 V = normalize(viewWorldPosition - fragWorldPosition);
-
     float kD = CalculateDiffuse(N, L);
     float kS = CalculateSpecular(N, L, V);
 
-    vec3 result = (kD + kS) * sun.intensity * sun.color * GetObjectColor();
+    return (kD + kS) * GetObjectColor();
+}
+
+vec3 CalculateDirectionalLighting(vec3 N, vec3 V)
+{
+    vec3 L = normalize(-sun.direction);
+    vec3 Lc = sun.intensity * sun.color;
+    vec3 Li = CalculateLightInternal(N, V, L);
+
+    vec3 result = Li * Lc;
+    return result;
+}
+
+vec3 CalculateSpotlight(vec3 N, vec3 V)
+{
+    vec3 L = normalize(spotlight.position - fragWorldPosition);
+    vec3 Ld = normalize(spotlight.position - spotlight.target);
+    vec3 Lc = spotlight.intensity * spotlight.color;
+    float theta = dot(L, Ld);
+    float espilon = spotlight.cutoff - spotlight.outerCutoff;
+    float intensity = clamp((theta - spotlight.outerCutoff) / espilon, 0.f, 1.f);
+    vec3 Li = vec3(CalculateLightInternal(N, V, L) * intensity);
+
+    vec3 result = Li * Lc;
     return result;
 }
 
 void main()
 {
     vec3 N = normalize(fragNormal);
-    vec3 Lo = CalculateDirectionalLighting(N);
+    vec3 V = normalize(viewWorldPosition - fragWorldPosition);
+    vec3 Lo = vec3(0.f);
+    Lo += CalculateDirectionalLighting(N, V);
+    Lo += CalculateSpotlight(N, V);
 
     Lo = pow(Lo, vec3(1.f / 2.2f));
     finalColor = vec4(Lo, 1.f);

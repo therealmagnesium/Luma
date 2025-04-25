@@ -21,5 +21,20 @@ namespace Luma
             BindShader(shader);
             UnbindShader();
         }
+
+        void DrawLight(SpotLight& spotLight, Shader& shader)
+        {
+            const float cutoff = glm::cos(glm::radians(spotLight.innerRadius));
+            const float outerCutoff = glm::cos(glm::radians(spotLight.outerRadius));
+
+            BindShader(shader);
+            SetShaderUniform(shader, "spotlight.intensity", &spotLight.intensity, SHADER_UNIFORM_FLOAT);
+            SetShaderUniform(shader, "spotlight.cutoff", (void*)&cutoff, SHADER_UNIFORM_FLOAT);
+            SetShaderUniform(shader, "spotlight.outerCutoff", (void*)&outerCutoff, SHADER_UNIFORM_FLOAT);
+            SetShaderUniform(shader, "spotlight.position", &spotLight.position, SHADER_UNIFORM_VEC3);
+            SetShaderUniform(shader, "spotlight.target", &spotLight.target, SHADER_UNIFORM_VEC3);
+            SetShaderUniform(shader, "spotlight.color", &spotLight.color, SHADER_UNIFORM_VEC3);
+            UnbindShader();
+        }
     }
 }
