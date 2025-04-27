@@ -1,5 +1,6 @@
 #pragma once
 #include "Luma/Core/Base.h"
+#include <glm/glm.hpp>
 
 namespace Luma
 {

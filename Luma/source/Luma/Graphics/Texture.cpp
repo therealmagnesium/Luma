@@ -29,6 +29,10 @@ namespace Luma
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+            /*
+                    float borderColor[] = {1.f, 1.f, 1.f, 1.f};
+                    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);*/
+
             glBindTexture(GL_TEXTURE_2D, 0);
 
             INFO("Empty texture loaded successfully with an ID of %d", texture.id);
@@ -139,6 +143,10 @@ namespace Luma
                     glFormat = GL_RED;
                     break;
 
+                case TEXTURE_FORMAT_DEPTH:
+                    glFormat = GL_DEPTH_COMPONENT;
+                    break;
+
                 case TEXTURE_FORMAT_DEPTH_STENCIL:
                     glFormat = GL_DEPTH_STENCIL;
                     break;
@@ -168,6 +176,10 @@ namespace Luma
                     glFormat = GL_RED;
                     break;
 
+                case TEXTURE_FORMAT_DEPTH:
+                    glFormat = GL_DEPTH_COMPONENT;
+                    break;
+
                 case TEXTURE_FORMAT_DEPTH_STENCIL:
                     glFormat = GL_DEPTH24_STENCIL8;
                     break;
@@ -193,7 +205,7 @@ namespace Luma
                     break;
 
                 case TEXTURE_FORMAT_DEPTH:
-                    glSize = GL_UNSIGNED_INT;
+                    glSize = GL_FLOAT;
                     break;
 
                 case TEXTURE_FORMAT_DEPTH_STENCIL:

@@ -9,11 +9,13 @@ struct SandboxState
 {
     Framebuffer framebuffer;
     Framebuffer framebufferIntermediate;
+    Framebuffer framebufferShadow;
 
     Shader* defaultShader = NULL;
     Shader* uvShader = NULL;
     Shader* normalShader = NULL;
     Shader* phongShader = NULL;
+    Shader* shadowMapShader = NULL;
     Shader* framebufferShader = NULL;
 
     Camera camera;

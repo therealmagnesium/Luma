@@ -114,11 +114,7 @@ namespace Luma
                 BindShader(*material.shader);
 
                 SetShaderUniform(*material.shader, "modelMatrix", (void*)&transform, SHADER_UNIFORM_MAT4);
-                SetShaderUniform(*material.shader, "viewMatrix", &GetPrimaryCamera()->view, SHADER_UNIFORM_MAT4);
-                SetShaderUniform(*material.shader, "projectionMatrix", (void*)&GetProjection(), SHADER_UNIFORM_MAT4);
                 SetShaderUniform(*material.shader, "normalMatrix", &normalMatrix, SHADER_UNIFORM_MAT4);
-                SetShaderUniform(*material.shader, "viewWorldPosition", &GetPrimaryCamera()->position,
-                                 SHADER_UNIFORM_VEC3);
                 SetShaderUniform(*material.shader, "albedo", &material.albedo, SHADER_UNIFORM_VEC3);
                 SetShaderUniform(*material.shader, "albedoTexture", (void*)&albedoTextureSlot, SHADER_UNIFORM_INT);
 

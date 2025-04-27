@@ -107,50 +107,56 @@ namespace Luma
 
         void SetShaderUniform(Shader& shader, const char* name, void* data, ShaderUniformType uniformType)
         {
-            if (shader.uniforms.find(name) != shader.uniforms.end() && data != NULL)
+            if (data == NULL)
             {
-                switch (uniformType)
+                WARN("Could not set uniform \"%s\" for shader %d because it is being passed null data", name,
+                     shader.id);
+                return;
+            }
+
+            if (shader.uniforms.find(name) == shader.uniforms.end())
+                return;
+
+            switch (uniformType)
+            {
+                case SHADER_UNIFORM_INT:
                 {
-                    case SHADER_UNIFORM_INT:
-                    {
-                        u32* newData = (u32*)data;
-                        glUniform1i(shader.uniforms[name], *newData);
-                        break;
-                    }
-
-                    case SHADER_UNIFORM_FLOAT:
-                    {
-                        float* newData = (float*)data;
-                        glUniform1f(shader.uniforms[name], *newData);
-                        break;
-                    }
-
-                    case SHADER_UNIFORM_VEC3:
-                    {
-                        glm::vec3* newData = (glm::vec3*)data;
-                        glUniform3fv(shader.uniforms[name], 1, glm::value_ptr(*newData));
-                        break;
-                    }
-
-                    case SHADER_UNIFORM_VEC4:
-                    {
-                        glm::vec4* newData = (glm::vec4*)data;
-                        glUniform4fv(shader.uniforms[name], 1, glm::value_ptr(*newData));
-                        break;
-                    }
-
-                    case SHADER_UNIFORM_MAT4:
-                    {
-                        glm::vec4* newData = (glm::vec4*)data;
-                        glUniformMatrix4fv(shader.uniforms[name], 1, false, glm::value_ptr(*newData));
-                        break;
-                    }
-
-                    default:
-                        break;
+                    u32* newData = (u32*)data;
+                    glUniform1i(shader.uniforms[name], *newData);
+                    break;
                 }
+
+                case SHADER_UNIFORM_FLOAT:
+                {
+                    float* newData = (float*)data;
+                    glUniform1f(shader.uniforms[name], *newData);
+                    break;
+                }
+
+                case SHADER_UNIFORM_VEC3:
+                {
+                    glm::vec3* newData = (glm::vec3*)data;
+                    glUniform3fv(shader.uniforms[name], 1, glm::value_ptr(*newData));
+                    break;
+                }
+
+                case SHADER_UNIFORM_VEC4:
+                {
+                    glm::vec4* newData = (glm::vec4*)data;
+                    glUniform4fv(shader.uniforms[name], 1, glm::value_ptr(*newData));
+                    break;
+                }
+
+                case SHADER_UNIFORM_MAT4:
+                {
+                    glm::vec4* newData = (glm::vec4*)data;
+                    glUniformMatrix4fv(shader.uniforms[name], 1, false, glm::value_ptr(*newData));
+                    break;
+                }
+
+                default:
+                    break;
             }
         }
-
     }
 }

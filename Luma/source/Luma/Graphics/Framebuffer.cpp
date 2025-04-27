@@ -64,6 +64,11 @@ namespace Luma
                     textureFormat = TEXTURE_FORMAT_DEPTH_STENCIL;
                     break;
 
+                case FB_ATTACHMENT_DEPTH:
+                    glType = GL_DEPTH_ATTACHMENT;
+                    textureFormat = TEXTURE_FORMAT_DEPTH;
+                    break;
+
                 default:
                     break;
             }
