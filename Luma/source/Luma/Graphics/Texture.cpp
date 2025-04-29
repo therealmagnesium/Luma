@@ -165,11 +165,11 @@ namespace Luma
             switch (format)
             {
                 case TEXTURE_FORMAT_RGB:
-                    glFormat = (applyGamma) ? GL_SRGB : GL_RGB;
+                    glFormat = (applyGamma) ? GL_SRGB : GL_RGB16F;
                     break;
 
                 case TEXTURE_FORMAT_RGBA:
-                    glFormat = (applyGamma) ? GL_SRGB_ALPHA : GL_RGBA;
+                    glFormat = (applyGamma) ? GL_SRGB_ALPHA : GL_RGBA16F;
                     break;
 
                 case TEXTURE_FORMAT_RED:
@@ -197,11 +197,11 @@ namespace Luma
             switch (format)
             {
                 case TEXTURE_FORMAT_RGB:
-                    glSize = GL_UNSIGNED_BYTE;
+                    glSize = GL_FLOAT;
                     break;
 
                 case TEXTURE_FORMAT_RGBA:
-                    glSize = GL_UNSIGNED_BYTE;
+                    glSize = GL_FLOAT;
                     break;
 
                 case TEXTURE_FORMAT_DEPTH:

@@ -139,6 +139,7 @@ void SetupLights()
     state.spotlight.position = glm::vec3(0.f, 5.f, 0.f);
     state.spotlight.target = glm::vec3(0.f);
     state.spotlight.color = glm::vec3(0.8f, 0.7f, 0.4f);
+    state.spotlight.intensity = 1.2f;
     state.spotlight.innerRadius = 15.f;
     state.spotlight.outerRadius = 20.f;
 }
