@@ -1,4 +1,5 @@
 #include "Luma/Graphics/RenderCommand.h"
+#include "Luma/Core/Log.h"
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>

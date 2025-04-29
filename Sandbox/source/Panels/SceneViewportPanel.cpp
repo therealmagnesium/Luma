@@ -24,14 +24,14 @@ void DisplaySceneViewport(Framebuffer& framebuffer, Shader& postProcessingShader
     ImDrawList* drawList = ImGui::GetWindowDrawList();
     drawList->AddCallback(DrawCallback, NULL);
 
-    ImVec2 aspectSize = GetLargestViewportSize();
-    ImVec2 windowPosition = GetCenteredViewportPosition(aspectSize);
+    state.aspectSize = GetLargestViewportSize();
+    ImVec2 windowPosition = GetCenteredViewportPosition(state.aspectSize);
 
-    RenderCommand::SetViewport(aspectSize.x, aspectSize.y);
-    ResizeFramebuffer(framebuffer, aspectSize.x, aspectSize.y);
+    RenderCommand::SetViewport(state.aspectSize.x, state.aspectSize.y);
+    ResizeFramebuffer(framebuffer, state.aspectSize.x, state.aspectSize.y);
 
     ImGui::SetCursorPos(windowPosition);
-    ImGui::Image((u64)framebuffer.attachments[0].id, aspectSize, ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
+    ImGui::Image((u64)framebuffer.attachments[0].id, state.aspectSize, ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
 
     drawList->AddCallback(ImDrawCallback_ResetRenderState, NULL);
     ImGui::End();
@@ -77,7 +77,12 @@ void DrawCallback(const ImDrawList*, const ImDrawCmd*)
     const glm::mat4 projection = glm::ortho(L, R, B, T);
 
     BindShader(*state.postProcessingShader);
-    BindTexture(state.framebuffer->attachments[0]);
+    BindTexture(state.framebuffer->attachments[0], 0);
     SetShaderUniform(*state.postProcessingShader, "albedoTexture", (void*)&albedoSlot, SHADER_UNIFORM_INT);
     SetShaderUniform(*state.postProcessingShader, "projectionMatrix", (void*)&projection, SHADER_UNIFORM_MAT4);
+}
+
+ImVec2& GetViewportAspectSize()
+{
+    return state.aspectSize;
 }

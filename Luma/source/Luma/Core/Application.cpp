@@ -60,11 +60,11 @@ namespace Luma
 
                 Graphics::RendererClear(V3_OPEN(clearColor));
 
+                state.handle->OnRender();
+
                 UI::BeginFrome();
                 state.handle->OnRenderUI();
                 UI::EndFrame();
-
-                state.handle->OnRender();
 
                 UI::Display();
 

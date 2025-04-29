@@ -46,7 +46,6 @@ namespace Luma
             UnloadShader(state.uvShader);
             UnloadShader(state.normalShader);
             UnloadShader(state.phongShader);
-            UnloadShader(state.shadowMapShader);
             UnloadShader(state.framebufferShader);
         }
 
@@ -100,11 +99,6 @@ namespace Luma
         Shader& GetPhongShader()
         {
             return state.phongShader;
-        }
-
-        Shader& GetShadowMapShader()
-        {
-            return state.shadowMapShader;
         }
 
         Shader& GetFramebufferShader()
@@ -181,10 +175,6 @@ namespace Luma
             CreateShaderUniform(state.phongShader, "spotlight.position");
             CreateShaderUniform(state.phongShader, "spotlight.target");
             CreateShaderUniform(state.phongShader, "spotlight.color");
-
-            state.shadowMapShader = LoadShader("assets/shaders/ShadowMap_vs.glsl", "assets/shaders/ShadowMap_fs.glsl");
-            CreateShaderUniform(state.shadowMapShader, "modelMatrix");
-            CreateShaderUniform(state.shadowMapShader, "lightSpaceMatrix");
 
             state.framebufferShader =
                 LoadShader("assets/shaders/Framebuffer_vs.glsl", "assets/shaders/Framebuffer_fs.glsl");

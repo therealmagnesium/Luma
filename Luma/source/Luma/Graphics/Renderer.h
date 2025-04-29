@@ -15,7 +15,6 @@ namespace Luma
             Shader uvShader;
             Shader normalShader;
             Shader phongShader;
-            Shader shadowMapShader;
             Shader framebufferShader;
             Window window;
             Camera* primaryCamera = NULL;
@@ -33,7 +32,6 @@ namespace Luma
         Shader& GetUVShader();
         Shader& GetNormalShader();
         Shader& GetPhongShader();
-        Shader& GetShadowMapShader();
         Shader& GetFramebufferShader();
         Window& GetMainWindow();
         Camera* GetPrimaryCamera();

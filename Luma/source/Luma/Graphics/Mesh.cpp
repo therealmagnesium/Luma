@@ -106,6 +106,7 @@ namespace Luma
         {
             Core::ApplicationConfig& appInfo = Core::GetApplicationInfo();
             const u32 albedoTextureSlot = 0;
+            const u32 shadowMapSlot = 1;
 
             if (material.shader != NULL && GetPrimaryCamera() != NULL)
             {
@@ -117,11 +118,16 @@ namespace Luma
                 SetShaderUniform(*material.shader, "normalMatrix", &normalMatrix, SHADER_UNIFORM_MAT4);
                 SetShaderUniform(*material.shader, "albedo", &material.albedo, SHADER_UNIFORM_VEC3);
                 SetShaderUniform(*material.shader, "albedoTexture", (void*)&albedoTextureSlot, SHADER_UNIFORM_INT);
+                SetShaderUniform(*material.shader, "shadowMap", (void*)&shadowMapSlot, SHADER_UNIFORM_INT);
+
+                BindTexture((Texture){.id = 0}, 0);
+                BindTexture((Texture){.id = 0}, 1);
 
                 if (material.albedoTexture != NULL)
-                    BindTexture(*material.albedoTexture);
-                else
-                    BindTexture((Texture){.id = 0});
+                    BindTexture(*material.albedoTexture, 0);
+
+                if (material.shadowMapTexture != NULL)
+                    BindTexture(*material.shadowMapTexture, 1);
 
                 BindVertexArray(mesh.vertexArray);
                 BindIndexBuffer(mesh.indexBuffer);

@@ -11,6 +11,7 @@ namespace Luma
         {
             glm::vec3 albedo = glm::vec3(1.f);
             Texture* albedoTexture = NULL;
+            Texture* shadowMapTexture = NULL;
             Shader* shader = NULL;
         };
 

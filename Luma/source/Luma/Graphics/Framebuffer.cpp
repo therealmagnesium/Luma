@@ -83,14 +83,14 @@ namespace Luma
             if (isMultisampled)
             {
                 Texture texture = LoadEmptyTextureMultisampled(textureSpec, 4);
-                BindTexture(texture);
+                BindTexture(texture, 0);
                 glFramebufferTexture2D(GL_FRAMEBUFFER, glType, GL_TEXTURE_2D_MULTISAMPLE, texture.id, 0);
                 framebuffer.attachments.push_back(texture);
             }
             else
             {
                 Texture texture = LoadEmptyTexture(textureSpec);
-                BindTexture(texture);
+                BindTexture(texture, 0);
                 glFramebufferTexture2D(GL_FRAMEBUFFER, glType, GL_TEXTURE_2D, texture.id, 0);
                 framebuffer.attachments.push_back(texture);
             }

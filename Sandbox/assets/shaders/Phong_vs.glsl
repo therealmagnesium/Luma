@@ -17,6 +17,7 @@ void main()
     fragWorldPosition = position * mat3(modelMatrix);
     fragTexCoord = texCoord;
     fragNormal = normal * mat3(normalMatrix);
+
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.f);
 }
 

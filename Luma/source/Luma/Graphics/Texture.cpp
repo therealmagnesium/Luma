@@ -24,14 +24,13 @@ namespace Luma
             glBindTexture(GL_TEXTURE_2D, texture.id);
 
             glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, spec.width, spec.height, 0, glFormat, glSize, NULL);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-            /*
-                    float borderColor[] = {1.f, 1.f, 1.f, 1.f};
-                    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);*/
+            float borderColor[] = {1.f, 1.f, 1.f, 1.f};
+            glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
             glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -115,8 +114,9 @@ namespace Luma
             return texture;
         }
 
-        void BindTexture(const Texture& texture)
+        void BindTexture(const Texture& texture, u8 slot)
         {
+            glActiveTexture(GL_TEXTURE0 + slot);
             glBindTexture(GL_TEXTURE_2D, texture.id);
         }
 
