@@ -41,8 +41,6 @@ namespace Luma
             InitializeMeshes();
             InitializeShaders();
 
-            glLineWidth(5.f);
-
             INFO("The renderer was initialized successfully");
         }
 
@@ -66,17 +64,18 @@ namespace Luma
                 state.projection = glm::perspective(state.primaryCamera->fov, aspectRatio, 0.1f, 200.f);
             }
 
-            BindShader(state.shaders[RENDERER_SHADER_PHONG]);
-            SetShaderUniform(state.shaders[RENDERER_SHADER_PHONG], "viewMatrix", &GetPrimaryCamera()->view, SHADER_UNIFORM_MAT4);
-            SetShaderUniform(state.shaders[RENDERER_SHADER_PHONG], "projectionMatrix", (void*)&GetProjection(), SHADER_UNIFORM_MAT4);
-            SetShaderUniform(state.shaders[RENDERER_SHADER_PHONG], "viewWorldPosition", &GetPrimaryCamera()->position,
-                             SHADER_UNIFORM_VEC3);
-            UnbindShader();
+            for (u32 i = 0; i < RENDERER_SHADER_COUNT; i++)
+            {
+                BindShader(state.shaders[i]);
+                SetShaderUniform(state.shaders[i], "viewMatrix", &GetPrimaryCamera()->view, SHADER_UNIFORM_MAT4);
+                SetShaderUniform(state.shaders[i], "projectionMatrix", (void*)&GetProjection(), SHADER_UNIFORM_MAT4);
 
-            BindShader(state.shaders[RENDERER_SHADER_DEFAULT]);
-            SetShaderUniform(state.shaders[RENDERER_SHADER_DEFAULT], "viewMatrix", &GetPrimaryCamera()->view, SHADER_UNIFORM_MAT4);
-            SetShaderUniform(state.shaders[RENDERER_SHADER_DEFAULT], "projectionMatrix", (void*)&GetProjection(), SHADER_UNIFORM_MAT4);
-            UnbindShader();
+                if (i == RENDERER_SHADER_PHONG)
+                    SetShaderUniform(state.shaders[RENDERER_SHADER_PHONG], "viewWorldPosition", &GetPrimaryCamera()->position,
+                                     SHADER_UNIFORM_VEC3);
+
+                UnbindShader();
+            }
 
             state.primaryShader = &state.shaders[RENDERER_SHADER_DEFAULT];
         }
@@ -94,12 +93,7 @@ namespace Luma
 
         void RendererDrawCube(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale, const Color& color)
         {
-            glm::mat4 transform = glm::mat4(1.f);
-            transform = glm::translate(transform, position);
-            transform = glm::rotate(transform, glm::radians(rotation.x), glm::vec3(1.f, 0.f, 0.f));
-            transform = glm::rotate(transform, glm::radians(rotation.y), glm::vec3(0.f, 1.f, 0.f));
-            transform = glm::rotate(transform, glm::radians(rotation.z), glm::vec3(0.f, 0.f, 1.f));
-            transform = glm::scale(transform, scale);
+            glm::mat4 transform = GetMeshTransform(position, rotation, scale);
 
             Material material = LoadMaterialDefault();
             material.albedo = color;
@@ -108,10 +102,32 @@ namespace Luma
             RendererDrawMesh(state.meshes[RENDERER_MESH_CUBE], transform, material);
         }
 
-        void RendererDrawCubeWires(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale, const Color& color)
+        void RendererDrawCubeWires(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale,
+                                   const Color& color, float lineWidth)
         {
+            glLineWidth(lineWidth);
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             RendererDrawCube(position, rotation, scale, color);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
+
+        void RendererDrawSphere(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale, const Color& color)
+        {
+            glm::mat4 transform = GetMeshTransform(position, rotation, scale);
+
+            Material material = LoadMaterialDefault();
+            material.albedo = color;
+            material.shader = state.primaryShader;
+
+            RendererDrawMesh(state.meshes[RENDERER_MESH_SPHERE], transform, material);
+        }
+
+        void RendererDrawSphereWires(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale,
+                                     const Color& color, float lineWidth)
+        {
+            glLineWidth(lineWidth);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            RendererDrawSphere(position, rotation, scale, color);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
 
@@ -179,6 +195,11 @@ namespace Luma
             return state.meshes[RENDERER_MESH_CUBE];
         }
 
+        Mesh& GetMeshSphere()
+        {
+            return state.meshes[RENDERER_MESH_SPHERE];
+        }
+
         Window& GetMainWindow()
         {
             return state.window;
@@ -215,7 +236,7 @@ namespace Luma
         {
             state.meshes[RENDERER_MESH_QUAD] = GenMeshQuad();
             state.meshes[RENDERER_MESH_CUBE] = GenMeshCube();
-            state.meshes[RENDERER_MESH_SPHERE] = (Mesh){.vertexArray = 0};
+            state.meshes[RENDERER_MESH_SPHERE] = GenMeshSphere(32, 32, 0.5f);
         }
 
         void InitializeShaders()

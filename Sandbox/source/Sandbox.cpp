@@ -45,6 +45,9 @@ void Sandbox_OnUpdate()
         QuitApplication();
 
     UpdateCamera(state.camera, CAMERA_TYPE_ARCBALL);
+
+    UpdateLight(state.sun, *state.phongShader);
+    UpdateLight(state.spotlight, *state.phongShader);
 }
 
 void Sandbox_OnRender()
@@ -154,14 +157,12 @@ void SetupMaterials()
 
 void RenderScene()
 {
-    UpdateLight(state.sun, *state.phongShader);
-    UpdateLight(state.spotlight, *state.phongShader);
-
     Mesh& cubeMesh = GetMeshCube();
-    RendererDrawMesh(cubeMesh, glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.7f, 0.f)), state.materials[0]);
-    RendererDrawMesh(cubeMesh, glm::scale(glm::mat4(1.f), glm::vec3(20.f, 0.2f, 20.f)), state.materials[1]);
+    Mesh& sphereMesh = GetMeshSphere();
 
-    RendererDrawCubeWires(glm::vec3(0.f, 0.7f, 0.f), glm::vec3(0.f), glm::vec3(1.f), Colors::Orange);
+    RendererDrawMesh(cubeMesh, glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.7f, 0.f)), state.materials[0]);
+    RendererDrawMesh(sphereMesh, glm::translate(glm::mat4(1.f), glm::vec3(-2.f, 0.7f, 0.f)), state.materials[1]);
+    RendererDrawMesh(cubeMesh, glm::scale(glm::mat4(1.f), glm::vec3(20.f, 0.2f, 20.f)), state.materials[1]);
 }
 
 void RenderPassLight()

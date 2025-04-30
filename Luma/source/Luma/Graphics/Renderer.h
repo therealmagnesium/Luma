@@ -46,7 +46,11 @@ namespace Luma
         void RendererEnd();
         void RendererClear(float r, float g, float b);
         void RendererDrawCube(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale, const Color& color);
-        void RendererDrawCubeWires(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale, const Color& color);
+        void RendererDrawSphere(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale, const Color& color);
+        void RendererDrawCubeWires(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale, const Color& color,
+                                   float lineWidth = 5.f);
+        void RendererDrawSphereWires(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale, const Color& color,
+                                     float lineWidth = 5.f);
         void RendererDrawMesh(Mesh& mesh, const glm::mat4& transform, Material& material);
 
         Shader& GetShaderDefault();
@@ -55,6 +59,7 @@ namespace Luma
         Shader& GetShaderPhong();
         Shader& GetShaderPostProcessing();
         Mesh& GetMeshCube();
+        Mesh& GetMeshSphere();
         Window& GetMainWindow();
         Camera* GetPrimaryCamera();
         const glm::vec3& GetClearColor();
