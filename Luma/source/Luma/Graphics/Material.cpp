@@ -9,7 +9,7 @@ namespace Luma
         Material LoadMaterialDefault()
         {
             Material material;
-            material.shader = &GetDefaultShader();
+            material.shader = &GetShaderDefault();
             return material;
         }
     }

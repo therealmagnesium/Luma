@@ -18,7 +18,6 @@ static SandboxState state;
 void SetupShaders();
 void SetupFramebuffers();
 void SetupTextures();
-void SetupMeshes();
 void SetupCamera();
 void SetupLights();
 void SetupMaterials();
@@ -35,7 +34,6 @@ void Sandbox_OnCreate()
     SetupShaders();
     SetupFramebuffers();
     SetupTextures();
-    SetupMeshes();
     SetupCamera();
     SetupLights();
     SetupMaterials();
@@ -80,18 +78,15 @@ void Sandbox_OnShutdown()
 {
     DestroyFramebuffer(state.framebuffer);
     DestroyFramebuffer(state.framebufferIntermediate);
-
-    DestroyMesh(state.quadMesh);
-    DestroyMesh(state.cubeMesh);
 }
 
 void SetupShaders()
 {
-    state.defaultShader = &GetDefaultShader();
-    state.uvShader = &GetUVShader();
-    state.normalShader = &GetNormalShader();
-    state.phongShader = &GetPhongShader();
-    state.framebufferShader = &GetFramebufferShader();
+    state.defaultShader = &GetShaderDefault();
+    state.uvShader = &GetShaderUV();
+    state.normalShader = &GetShaderNormal();
+    state.phongShader = &GetShaderPhong();
+    state.framebufferShader = &GetShaderPostProcessing();
 }
 
 void SetupFramebuffers()
@@ -112,12 +107,6 @@ void SetupTextures()
 {
     state.textures[0] = LoadTexture("assets/textures/texture0.png");
     state.textures[1] = LoadTexture("assets/textures/texture2.png");
-}
-
-void SetupMeshes()
-{
-    state.quadMesh = GenMeshQuad();
-    state.cubeMesh = GenMeshCube();
 }
 
 void SetupCamera()
@@ -165,11 +154,14 @@ void SetupMaterials()
 
 void RenderScene()
 {
-    DrawLight(state.sun, *state.phongShader);
-    DrawLight(state.spotlight, *state.phongShader);
+    UpdateLight(state.sun, *state.phongShader);
+    UpdateLight(state.spotlight, *state.phongShader);
 
-    DrawMesh(state.cubeMesh, glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.7f, 0.f)), state.materials[0]);
-    DrawMesh(state.cubeMesh, glm::scale(glm::mat4(1.f), glm::vec3(20.f, 0.2f, 20.f)), state.materials[1]);
+    Mesh& cubeMesh = GetMeshCube();
+    RendererDrawMesh(cubeMesh, glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.7f, 0.f)), state.materials[0]);
+    RendererDrawMesh(cubeMesh, glm::scale(glm::mat4(1.f), glm::vec3(20.f, 0.2f, 20.f)), state.materials[1]);
+
+    RendererDrawCubeWires(glm::vec3(0.f, 0.7f, 0.f), glm::vec3(0.f), glm::vec3(1.f), Colors::Orange);
 }
 
 void RenderPassLight()

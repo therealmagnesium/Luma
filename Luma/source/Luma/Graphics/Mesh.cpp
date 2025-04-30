@@ -79,8 +79,8 @@ namespace Luma
                 (Vertex){glm::vec3(0.5f, 0.5f, 0.5f), glm::vec2(0.0f, 1.0f), glm::vec3(0.f, 1.f, 0.f)},     // G 23
             };
 
-            u32 indices[] = {0,  3,  2,  2,  1,  0,  4,  5,  6,  6,  7,  4,   // front and back
-                             11, 8,  9,  9,  10, 11, 12, 13, 14, 14, 15, 12,  // left and right
+            u32 indices[] = {0, 3, 2, 2, 1, 0, 4, 5, 6, 6, 7, 4,              // front and back
+                             11, 8, 9, 9, 10, 11, 12, 13, 14, 14, 15, 12,     // left and right
                              16, 17, 18, 18, 19, 16, 20, 21, 22, 22, 23, 20}; // bottom and top
 
             Mesh mesh = CreateMesh(vertices, LEN(vertices), indices, LEN(indices));
@@ -99,46 +99,6 @@ namespace Luma
                 mesh.vertexArray = 0;
                 mesh.vertexBuffer = 0;
                 mesh.indexBuffer = 0;
-            }
-        }
-
-        void DrawMesh(Mesh& mesh, const glm::mat4& transform, Material& material)
-        {
-            Core::ApplicationConfig& appInfo = Core::GetApplicationInfo();
-            const u32 albedoTextureSlot = 0;
-            const u32 shadowMapSlot = 1;
-
-            if (material.shader != NULL && GetPrimaryCamera() != NULL)
-            {
-                glm::mat4 normalMatrix = glm::transpose(glm::inverse(transform));
-
-                BindShader(*material.shader);
-
-                SetShaderUniform(*material.shader, "modelMatrix", (void*)&transform, SHADER_UNIFORM_MAT4);
-                SetShaderUniform(*material.shader, "normalMatrix", &normalMatrix, SHADER_UNIFORM_MAT4);
-                SetShaderUniform(*material.shader, "albedo", &material.albedo, SHADER_UNIFORM_VEC3);
-                SetShaderUniform(*material.shader, "albedoTexture", (void*)&albedoTextureSlot, SHADER_UNIFORM_INT);
-                SetShaderUniform(*material.shader, "shadowMap", (void*)&shadowMapSlot, SHADER_UNIFORM_INT);
-
-                BindTexture((Texture){.id = 0}, 0);
-                BindTexture((Texture){.id = 0}, 1);
-
-                if (material.albedoTexture != NULL)
-                    BindTexture(*material.albedoTexture, 0);
-
-                if (material.shadowMapTexture != NULL)
-                    BindTexture(*material.shadowMapTexture, 1);
-
-                BindVertexArray(mesh.vertexArray);
-                BindIndexBuffer(mesh.indexBuffer);
-
-                RenderCommand::DrawIndexed(mesh.indices.size());
-
-                UnbindIndexBuffer();
-                UnbindVertexArray();
-
-                UnbindTexture();
-                UnbindShader();
             }
         }
 

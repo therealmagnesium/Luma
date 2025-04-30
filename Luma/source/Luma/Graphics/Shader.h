@@ -18,6 +18,12 @@ namespace Luma
             SHADER_UNIFORM_MAT4,
         };
 
+        enum ShaderUniformLightType
+        {
+            SHADER_UNIFORM_DIRECTIONAL = 0,
+            SHADER_UNIFORM_SPOTLIGHT
+        };
+
         struct ShaderSource
         {
             std::string vertexPath;
@@ -38,6 +44,8 @@ namespace Luma
         void UnbindShader();
 
         void CreateShaderUniform(Shader& shader, const char* name);
+        void CreateShaderUniformMVP(Shader& shader);
+        void CreateShaderUniformLight(Shader& shader, ShaderUniformLightType type);
         void SetShaderUniform(Shader& shader, const char* name, void* data, ShaderUniformType uniformType);
     }
 }

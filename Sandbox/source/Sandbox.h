@@ -20,9 +20,6 @@ struct SandboxState
     DirectionalLight sun;
     SpotLight spotlight;
 
-    Mesh quadMesh;
-    Mesh cubeMesh;
-
     Material defaultMaterial;
     Material framebufferMaterial;
     Material materials[2];

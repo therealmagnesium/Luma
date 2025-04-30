@@ -7,7 +7,7 @@ namespace Luma
 {
     namespace Graphics
     {
-        void DrawLight(DirectionalLight& sun, Shader& shader)
+        void UpdateLight(DirectionalLight& sun, Shader& shader)
         {
             BindShader(shader);
             SetShaderUniform(shader, "sun.intensity", &sun.intensity, SHADER_UNIFORM_FLOAT);
@@ -16,13 +16,13 @@ namespace Luma
             UnbindShader();
         }
 
-        void DrawLight(PointLight& pointLight, Shader& shader)
+        void UpdateLight(PointLight& pointLight, Shader& shader)
         {
             BindShader(shader);
             UnbindShader();
         }
 
-        void DrawLight(SpotLight& spotLight, Shader& shader)
+        void UpdateLight(SpotLight& spotLight, Shader& shader)
         {
             const float cutoff = glm::cos(glm::radians(spotLight.innerRadius));
             const float outerCutoff = glm::cos(glm::radians(spotLight.outerRadius));

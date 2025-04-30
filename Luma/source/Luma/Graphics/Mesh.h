@@ -22,6 +22,5 @@ namespace Luma
         Mesh GenMeshQuad();
         Mesh GenMeshCube();
         void DestroyMesh(Mesh& mesh);
-        void DrawMesh(Mesh& mesh, const glm::mat4& transform, Material& material);
     }
 }

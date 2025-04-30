@@ -72,8 +72,8 @@ namespace Luma
         {
             if (shader.id != 0)
             {
-                INFO("Unloading shader [%s, %s]...",   //
-                     shader.source.vertexPath.c_str(), //
+                INFO("Unloading shader [%s, %s]...",
+                     shader.source.vertexPath.c_str(),
                      shader.source.fragmentPath.c_str());
 
                 UnbindShader();
@@ -103,6 +103,34 @@ namespace Luma
 
             if (shader.uniforms[name] == -1)
                 WARN("Shader with id %d could not find uniform \"%s\"", shader.id, name);
+        }
+
+        void CreateShaderUniformMVP(Shader& shader)
+        {
+            CreateShaderUniform(shader, "modelMatrix");
+            CreateShaderUniform(shader, "viewMatrix");
+            CreateShaderUniform(shader, "projectionMatrix");
+        }
+
+        void CreateShaderUniformLight(Shader& shader, ShaderUniformLightType type)
+        {
+            switch (type)
+            {
+                case SHADER_UNIFORM_DIRECTIONAL:
+                    CreateShaderUniform(shader, "sun.intensity");
+                    CreateShaderUniform(shader, "sun.color");
+                    CreateShaderUniform(shader, "sun.direction");
+                    break;
+
+                case SHADER_UNIFORM_SPOTLIGHT:
+                    CreateShaderUniform(shader, "spotlight.intensity");
+                    CreateShaderUniform(shader, "spotlight.cutoff");
+                    CreateShaderUniform(shader, "spotlight.outerCutoff");
+                    CreateShaderUniform(shader, "spotlight.position");
+                    CreateShaderUniform(shader, "spotlight.target");
+                    CreateShaderUniform(shader, "spotlight.color");
+                    break;
+            }
         }
 
         void SetShaderUniform(Shader& shader, const char* name, void* data, ShaderUniformType uniformType)
