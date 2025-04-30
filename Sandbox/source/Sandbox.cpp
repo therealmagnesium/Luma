@@ -47,7 +47,7 @@ void Sandbox_OnUpdate()
     UpdateCamera(state.camera, CAMERA_TYPE_ARCBALL);
 
     UpdateLight(state.sun, *state.phongShader);
-    UpdateLight(state.spotlight, *state.phongShader);
+    // UpdateLight(state.spotlight, *state.phongShader);
 }
 
 void Sandbox_OnRender()
@@ -89,6 +89,7 @@ void SetupShaders()
     state.uvShader = &GetShaderUV();
     state.normalShader = &GetShaderNormal();
     state.phongShader = &GetShaderPhong();
+    state.phongShader = &GetShaderPBR();
     state.framebufferShader = &GetShaderPostProcessing();
 }
 
@@ -124,7 +125,7 @@ void SetupCamera()
 
 void SetupLights()
 {
-    state.sun.direction = glm::vec3(-0.2f, -1.f, -0.5f);
+    state.sun.direction = glm::vec3(-0.2f, -0.7f, -1.f);
     state.sun.intensity = 1.5f;
     state.sun.color = glm::vec3(0.9f, 0.8f, 0.7f);
 
@@ -150,6 +151,10 @@ void SetupMaterials()
     state.materials[1].albedoTexture = &state.textures[1];
     state.materials[1].shader = state.phongShader;
 
+    state.materials[2] = LoadMaterialDefault();
+    state.materials[2].albedo = glm::vec3(0.1f, 0.4f, 0.7f);
+    state.materials[2].shader = state.pbrShader;
+
     state.framebufferMaterial = LoadMaterialDefault();
     state.framebufferMaterial.shader = state.framebufferShader;
     state.framebufferMaterial.albedoTexture = &state.framebufferIntermediate.attachments[0];
@@ -160,9 +165,24 @@ void RenderScene()
     Mesh& cubeMesh = GetMeshCube();
     Mesh& sphereMesh = GetMeshSphere();
 
+    const u32 numRows = 7;
+    const u32 numCols = 7;
+    const float spacing = 2.f;
+
+    for (u32 i = 0; i < numRows; i++)
+    {
+        for (u32 j = 0; j < numCols; j++)
+        {
+            glm::vec3 position = glm::vec3((j - (numCols / 2.f)) * spacing, (i - (numRows / 2.f)) * spacing, 0.f);
+            glm::mat4 transform = glm::translate(glm::mat4(1.f), position);
+            RendererDrawMesh(sphereMesh, transform, state.materials[2]);
+        }
+    }
+
+    /*
     RendererDrawMesh(cubeMesh, glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.7f, 0.f)), state.materials[0]);
     RendererDrawMesh(sphereMesh, glm::translate(glm::mat4(1.f), glm::vec3(-2.f, 0.7f, 0.f)), state.materials[1]);
-    RendererDrawMesh(cubeMesh, glm::scale(glm::mat4(1.f), glm::vec3(20.f, 0.2f, 20.f)), state.materials[1]);
+    RendererDrawMesh(cubeMesh, glm::scale(glm::mat4(1.f), glm::vec3(20.f, 0.2f, 20.f)), state.materials[1]);*/
 }
 
 void RenderPassLight()

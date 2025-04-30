@@ -70,10 +70,17 @@ namespace Luma
                 SetShaderUniform(state.shaders[i], "viewMatrix", &GetPrimaryCamera()->view, SHADER_UNIFORM_MAT4);
                 SetShaderUniform(state.shaders[i], "projectionMatrix", (void*)&GetProjection(), SHADER_UNIFORM_MAT4);
 
-                if (i == RENDERER_SHADER_PHONG)
-                    SetShaderUniform(state.shaders[RENDERER_SHADER_PHONG], "viewWorldPosition", &GetPrimaryCamera()->position,
-                                     SHADER_UNIFORM_VEC3);
-
+                switch (i)
+                {
+                    case RENDERER_SHADER_PHONG:
+                        SetShaderUniform(state.shaders[RENDERER_SHADER_PHONG], "viewWorldPosition",
+                                         &GetPrimaryCamera()->position, SHADER_UNIFORM_VEC3);
+                        break;
+                    case RENDERER_SHADER_PBR:
+                        SetShaderUniform(state.shaders[RENDERER_SHADER_PBR], "viewWorldPosition",
+                                         &GetPrimaryCamera()->position, SHADER_UNIFORM_VEC3);
+                        break;
+                }
                 UnbindShader();
             }
 
@@ -185,6 +192,11 @@ namespace Luma
             return state.shaders[RENDERER_SHADER_PHONG];
         }
 
+        Shader& GetShaderPBR()
+        {
+            return state.shaders[RENDERER_SHADER_PBR];
+        }
+
         Shader& GetShaderPostProcessing()
         {
             return state.shaders[RENDERER_SHADER_POST_PROCESSING];
@@ -261,6 +273,13 @@ namespace Luma
             CreateShaderUniform(state.shaders[RENDERER_SHADER_PHONG], "albedoTexture");
             CreateShaderUniformLight(state.shaders[RENDERER_SHADER_PHONG], SHADER_UNIFORM_DIRECTIONAL);
             CreateShaderUniformLight(state.shaders[RENDERER_SHADER_PHONG], SHADER_UNIFORM_SPOTLIGHT);
+
+            state.shaders[RENDERER_SHADER_PBR] = LoadShader("assets/shaders/PBR_vs.glsl", "assets/shaders/PBR_fs.glsl");
+            CreateShaderUniformMVP(state.shaders[RENDERER_SHADER_PBR]);
+            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "normalMatrix");
+            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "viewWorldPosition");
+            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "albedo");
+            CreateShaderUniformLight(state.shaders[RENDERER_SHADER_PBR], SHADER_UNIFORM_DIRECTIONAL);
 
             state.shaders[RENDERER_SHADER_POST_PROCESSING] = LoadShader("assets/shaders/Framebuffer_vs.glsl",
                                                                         "assets/shaders/Framebuffer_fs.glsl");

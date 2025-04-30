@@ -29,8 +29,9 @@ namespace Luma
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-            float borderColor[] = {1.f, 1.f, 1.f, 1.f};
-            glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+            /*
+                    float borderColor[] = {1.f, 1.f, 1.f, 1.f};
+                    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);*/
 
             glBindTexture(GL_TEXTURE_2D, 0);
 

@@ -14,6 +14,7 @@ struct SandboxState
     Shader* uvShader = NULL;
     Shader* normalShader = NULL;
     Shader* phongShader = NULL;
+    Shader* pbrShader = NULL;
     Shader* framebufferShader = NULL;
 
     Camera camera;
@@ -22,7 +23,7 @@ struct SandboxState
 
     Material defaultMaterial;
     Material framebufferMaterial;
-    Material materials[2];
+    Material materials[3];
     Texture textures[2];
 };
 

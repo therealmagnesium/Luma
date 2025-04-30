@@ -17,6 +17,7 @@ namespace Luma
             RENDERER_SHADER_UV,
             RENDERER_SHADER_NORMAL,
             RENDERER_SHADER_PHONG,
+            RENDERER_SHADER_PBR,
             RENDERER_SHADER_POST_PROCESSING,
             RENDERER_SHADER_COUNT,
         };
@@ -57,6 +58,7 @@ namespace Luma
         Shader& GetShaderUV();
         Shader& GetShaderNormal();
         Shader& GetShaderPhong();
+        Shader& GetShaderPBR();
         Shader& GetShaderPostProcessing();
         Mesh& GetMeshCube();
         Mesh& GetMeshSphere();

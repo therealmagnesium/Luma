@@ -63,7 +63,6 @@ vec3 GetObjectColor()
     }
 
     return result;
-
 }
 
 float CalculateDiffuse(vec3 N, vec3 L)
