@@ -7,10 +7,10 @@ namespace Luma
         enum MouseButton
         {
             MOUSE_BUTTON_UNKNOWN = 0,
-            MOUSE_BUTTON_LEFT = 1,
-            MOUSE_BUTTON_MIDDLE = 2,
-            MOUSE_BUTTON_RIGHT = 3,
-            MOUSE_BUTTON_COUNT = 3
+            MOUSE_BUTTON_LEFT,
+            MOUSE_BUTTON_MIDDLE,
+            MOUSE_BUTTON_RIGHT,
+            MOUSE_BUTTON_COUNT
         };
 
         enum KeyboardKey

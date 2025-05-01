@@ -51,7 +51,7 @@ namespace Luma
             if (Core::IsKeyDown(Core::KEY_D))
                 camera.position += camera.moveSpeed * camera.GetRightVector();
 
-            if (Core::IsMouseDown(Core::MOUSE_BUTTON_LEFT))
+            if (Core::IsMouseDown(Core::MOUSE_BUTTON_RIGHT))
             {
                 glm::vec4 position = glm::vec4(V3_OPEN(camera.position), 1.f);
                 glm::vec4 pivot = glm::vec4(V3_OPEN(camera.target), 1.f);

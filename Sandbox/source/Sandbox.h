@@ -24,7 +24,7 @@ struct SandboxState
     Material defaultMaterial;
     Material framebufferMaterial;
     Material materials[3];
-    Texture textures[2];
+    Texture textures[3];
 };
 
 void Sandbox_OnCreate();

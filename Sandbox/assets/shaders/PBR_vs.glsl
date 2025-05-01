@@ -17,9 +17,9 @@ uniform mat4 normalMatrix;
 
 void main()
 {
-    data.worldPosition = position * mat3(modelMatrix);
+    data.worldPosition = mat3(modelMatrix) * position;
     data.texCoord = texCoord;
-    data.normal = normal * mat3(normalMatrix);
+    data.normal = mat3(normalMatrix) * normal;
 
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.f);
 }

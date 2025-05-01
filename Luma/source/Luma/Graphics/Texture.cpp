@@ -121,8 +121,9 @@ namespace Luma
             glBindTexture(GL_TEXTURE_2D, texture.id);
         }
 
-        void UnbindTexture()
+        void UnbindTexture(u8 slot)
         {
+            glActiveTexture(GL_TEXTURE0 + slot);
             glBindTexture(GL_TEXTURE_2D, 0);
         }
 

@@ -142,6 +142,8 @@ namespace Luma
         {
             Core::ApplicationConfig& appInfo = Core::GetApplicationInfo();
             const u32 albedoTextureSlot = 0;
+            const u32 metallicTextureSlot = 1;
+            const u32 roughnessTextureSlot = 2;
 
             if (material.shader != NULL && GetPrimaryCamera() != NULL)
             {
@@ -152,12 +154,24 @@ namespace Luma
                 SetShaderUniform(*material.shader, "modelMatrix", (void*)&transform, SHADER_UNIFORM_MAT4);
                 SetShaderUniform(*material.shader, "normalMatrix", &normalMatrix, SHADER_UNIFORM_MAT4);
                 SetShaderUniform(*material.shader, "albedo", &material.albedo, SHADER_UNIFORM_VEC3);
+                SetShaderUniform(*material.shader, "metallic", &material.metallic, SHADER_UNIFORM_FLOAT);
+                SetShaderUniform(*material.shader, "roughness", &material.roughness, SHADER_UNIFORM_FLOAT);
                 SetShaderUniform(*material.shader, "albedoTexture", (void*)&albedoTextureSlot, SHADER_UNIFORM_INT);
+                SetShaderUniform(*material.shader, "metallicTexture", (void*)&metallicTextureSlot, SHADER_UNIFORM_INT);
+                SetShaderUniform(*material.shader, "roughnessTexture", (void*)&roughnessTextureSlot, SHADER_UNIFORM_INT);
 
                 BindTexture((Texture){.id = 0}, 0);
+                BindTexture((Texture){.id = 0}, 1);
+                BindTexture((Texture){.id = 0}, 2);
 
                 if (material.albedoTexture != NULL)
                     BindTexture(*material.albedoTexture, 0);
+
+                if (material.metallicTexture != NULL)
+                    BindTexture(*material.metallicTexture, 1);
+
+                if (material.roughnessTexture != NULL)
+                    BindTexture(*material.roughnessTexture, 2);
 
                 BindVertexArray(mesh.vertexArray);
                 BindIndexBuffer(mesh.indexBuffer);
@@ -167,7 +181,7 @@ namespace Luma
                 UnbindIndexBuffer();
                 UnbindVertexArray();
 
-                UnbindTexture();
+                UnbindTexture(0);
                 UnbindShader();
             }
         }
@@ -279,6 +293,11 @@ namespace Luma
             CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "normalMatrix");
             CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "viewWorldPosition");
             CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "albedo");
+            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "metallic");
+            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "roughness");
+            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "albedoTexture");
+            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "metallicTexture");
+            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "roughnessTexture");
             CreateShaderUniformLight(state.shaders[RENDERER_SHADER_PBR], SHADER_UNIFORM_DIRECTIONAL);
 
             state.shaders[RENDERER_SHADER_POST_PROCESSING] = LoadShader("assets/shaders/Framebuffer_vs.glsl",

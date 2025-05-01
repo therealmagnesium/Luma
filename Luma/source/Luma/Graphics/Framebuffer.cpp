@@ -96,7 +96,7 @@ namespace Luma
             }
 
             UnbindFramebuffer(FB_READ_WRITE);
-            UnbindTexture();
+            UnbindTexture(0);
         }
 
         void ResizeFramebuffer(Framebuffer& framebuffer, u32 width, u32 height)

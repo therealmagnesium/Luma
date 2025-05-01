@@ -36,7 +36,7 @@ namespace Luma
         Texture LoadEmptyTextureMultisampled(TextureSpecification& spec, u8 numSamples);
         Texture LoadTexture(const char* path);
         void BindTexture(const Texture& texture, u8 slot);
-        void UnbindTexture();
+        void UnbindTexture(u8 slot);
 
         u32 TextureFormatToGL(TextureFormat format);
         u32 TextureFormatToGLInternal(TextureFormat format, bool applyGamma);

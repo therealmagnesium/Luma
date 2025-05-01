@@ -46,7 +46,7 @@ void Sandbox_OnUpdate()
 
     UpdateCamera(state.camera, CAMERA_TYPE_ARCBALL);
 
-    UpdateLight(state.sun, *state.phongShader);
+    UpdateLight(state.sun, *state.pbrShader);
     // UpdateLight(state.spotlight, *state.phongShader);
 }
 
@@ -89,7 +89,7 @@ void SetupShaders()
     state.uvShader = &GetShaderUV();
     state.normalShader = &GetShaderNormal();
     state.phongShader = &GetShaderPhong();
-    state.phongShader = &GetShaderPBR();
+    state.pbrShader = &GetShaderPBR();
     state.framebufferShader = &GetShaderPostProcessing();
 }
 
@@ -109,8 +109,9 @@ void SetupFramebuffers()
 
 void SetupTextures()
 {
-    state.textures[0] = LoadTexture("assets/textures/texture0.png");
-    state.textures[1] = LoadTexture("assets/textures/texture2.png");
+    state.textures[0] = LoadTexture("assets/textures/rusty_iron/albedo.png");
+    state.textures[1] = LoadTexture("assets/textures/rusty_iron/metallic.png");
+    state.textures[2] = LoadTexture("assets/textures/rusty_iron/roughness.png");
 }
 
 void SetupCamera()
@@ -142,17 +143,18 @@ void SetupMaterials()
     state.defaultMaterial = LoadMaterialDefault();
 
     state.materials[0] = LoadMaterialDefault();
-    // state.materials[0].albedo = glm::vec3(0.2f, 0.4f, 0.8f);
     state.materials[0].albedoTexture = &state.textures[0];
     state.materials[0].shader = state.phongShader;
 
     state.materials[1] = LoadMaterialDefault();
-    // state.materials[1].albedo = glm::vec3(0.4f, 0.8f, 0.2f);
-    state.materials[1].albedoTexture = &state.textures[1];
+    state.materials[1].albedoTexture = &state.textures[0];
     state.materials[1].shader = state.phongShader;
 
     state.materials[2] = LoadMaterialDefault();
-    state.materials[2].albedo = glm::vec3(0.1f, 0.4f, 0.7f);
+    state.materials[2].albedo = Colors::White;
+    state.materials[2].albedoTexture = &state.textures[0];
+    state.materials[2].metallicTexture = &state.textures[1];
+    state.materials[2].roughnessTexture = &state.textures[2];
     state.materials[2].shader = state.pbrShader;
 
     state.framebufferMaterial = LoadMaterialDefault();
@@ -169,12 +171,29 @@ void RenderScene()
     const u32 numCols = 7;
     const float spacing = 2.f;
 
+    static float rotation = 90.f;
+    static float rotationSpeed = 45.f;
+
+    rotation -= Time->deltaTime * rotationSpeed;
+    if (rotation <= 0.f)
+        rotation = 360.f;
+
     for (u32 i = 0; i < numRows; i++)
     {
+        state.materials[2].metallic = i / (float)numRows;
+
         for (u32 j = 0; j < numCols; j++)
         {
+            state.materials[2].roughness = glm::clamp(j / (float)numCols, 0.05f, 1.f);
+
             glm::vec3 position = glm::vec3((j - (numCols / 2.f)) * spacing, (i - (numRows / 2.f)) * spacing, 0.f);
-            glm::mat4 transform = glm::translate(glm::mat4(1.f), position);
+
+            glm::mat4 transform = glm::mat4(1.f);
+            transform = glm::translate(transform, position);
+            transform = glm::rotate(transform, glm::radians(rotation), glm::vec3(1.f, 0.f, 0.f));
+            transform = glm::rotate(transform, glm::radians(0.f), glm::vec3(0.f, 1.f, 0.f));
+            transform = glm::rotate(transform, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
+            transform = glm::scale(transform, glm::vec3(1.f));
             RendererDrawMesh(sphereMesh, transform, state.materials[2]);
         }
     }
@@ -193,9 +212,6 @@ void RenderPassLight()
 
     BindFramebuffer(state.framebuffer, FB_READ_WRITE);
     RendererClear(V3_OPEN(GetClearColor()));
-
-    for (u32 i = 0; i < LEN(state.materials); i++)
-        state.materials[i].shader = state.phongShader;
 
     RenderScene();
 

@@ -16,17 +16,23 @@ struct DirectionalLight
 };
 
 const float k_ambient = 0.03f;
-const float k_metallic = 0.f;
-const float k_roughness = 1.f;
 const float k_dielectricF0 = 0.04f;
 const float k_PI = 3.14159265359f;
 
-uniform vec3 albedo;
 uniform vec3 viewWorldPosition;
+uniform vec3 albedo;
+uniform float metallic;
+uniform float roughness;
+
+uniform sampler2D albedoTexture;
+uniform sampler2D metallicTexture;
+uniform sampler2D roughnessTexture;
 
 uniform DirectionalLight sun;
 
 vec3 GetObjectColor();
+float GetMetallicValue();
+float GetRoughnessValue();
 float DistributionGGX(vec3 N, vec3 H, float roughness);
 float GeometrySchlickGGX(float NdotV, float roughness);
 float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness);
@@ -36,16 +42,18 @@ void main()
 {
     vec3 N = normalize(data.normal);
     vec3 V = normalize(viewWorldPosition - data.worldPosition);
-
-    vec3 F0 = vec3(k_dielectricF0); 
-    F0 = mix(F0, albedo, k_metallic);
-
-    vec3 Lo = vec3(0.f);
     vec3 L = normalize(-sun.direction);
     vec3 H = normalize(V + L);
 
-    float NDF = DistributionGGX(N, H, k_roughness);   
-    float G   = GeometrySmith(N, V, L, k_roughness);      
+    vec3 albedoValue = GetObjectColor();
+    float metallicValue = GetMetallicValue();
+    float roughnessValue = GetRoughnessValue();
+
+    vec3 F0 = vec3(k_dielectricF0); 
+    F0 = mix(F0, albedoValue, metallicValue);
+
+    float NDF = DistributionGGX(N, H, roughnessValue);   
+    float G   = GeometrySmith(N, V, L, roughnessValue);      
     vec3 F    = FresnelSchlick(clamp(dot(H, V), 0.0, 1.0), F0);
 
     vec3 numerator    = NDF * G * F; 
@@ -53,12 +61,13 @@ void main()
     vec3 specular = numerator / denominator;
 
     vec3 kS = F;
-    vec3 kD = (vec3(1.0) - kS) * (1.0 - k_metallic);
+    vec3 kD = (vec3(1.0) - kS) * (1.0 - metallicValue);
     float NdotL = max(dot(N, L), 0.0);        
 
-    Lo += (kD * albedo / k_PI + specular) * NdotL;
-
-    vec3 ambient = vec3(k_ambient) * albedo;
+    vec3 Lo = (kD * albedoValue / k_PI + specular) * NdotL;
+    Lo *= sun.intensity * sun.color;
+    
+    vec3 ambient = vec3(k_ambient) * albedoValue;
     vec3 result = ambient + Lo;
 
     result = result / (result + vec3(1.0)); // HDR tone mapping
@@ -70,15 +79,40 @@ vec3 GetObjectColor()
 {
     vec3 result = albedo;
 
-    /*
-    if (textureSize(albedoTexture, 0).x > 1.f)
+    if (textureSize(albedoTexture, 0).x > 1)
     {
-        vec3 texel = texture(albedoTexture, fragTexCoord).xyz;
+        vec3 texel = texture(albedoTexture, data.texCoord).xyz;
         result *= texel;
-        return result;
-    }*/
+    }
 
     return result;
+}
+
+float GetMetallicValue() 
+{
+    float result = metallic;
+
+    if (textureSize(metallicTexture, 0).x > 1)
+    {
+        float metallicValue = texture(metallicTexture, data.texCoord).x;
+        result = metallicValue;
+    }
+
+    return result;
+}
+
+float GetRoughnessValue() 
+{
+    float result = roughness;
+
+    if (textureSize(roughnessTexture, 0).x > 1)
+    {
+        float roughnessValue = texture(roughnessTexture, data.texCoord).x;
+        result = roughnessValue;
+    }
+
+    return result;
+
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)
