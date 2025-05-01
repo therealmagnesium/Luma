@@ -151,7 +151,7 @@ void SetupMaterials()
     state.materials[1].shader = state.phongShader;
 
     state.materials[2] = LoadMaterialDefault();
-    state.materials[2].albedo = Colors::White;
+    state.materials[2].albedo = Colors::SoftWhite;
     state.materials[2].albedoTexture = &state.textures[0];
     state.materials[2].metallicTexture = &state.textures[1];
     state.materials[2].roughnessTexture = &state.textures[2];
@@ -167,10 +167,11 @@ void RenderScene()
     Mesh& cubeMesh = GetMeshCube();
     Mesh& sphereMesh = GetMeshSphere();
 
-    const u32 numRows = 7;
-    const u32 numCols = 7;
+    const u32 numRows = 5;
+    const u32 numCols = 5;
     const float spacing = 2.f;
 
+    static Mesh* mesh = &sphereMesh;
     static float rotation = 90.f;
     static float rotationSpeed = 45.f;
 
@@ -180,21 +181,20 @@ void RenderScene()
 
     for (u32 i = 0; i < numRows; i++)
     {
-        state.materials[2].metallic = i / (float)numRows;
-
         for (u32 j = 0; j < numCols; j++)
         {
-            state.materials[2].roughness = glm::clamp(j / (float)numCols, 0.05f, 1.f);
+            mesh = &sphereMesh;
+
+            if (j % 2 == 0)
+                mesh = &cubeMesh;
 
             glm::vec3 position = glm::vec3((j - (numCols / 2.f)) * spacing, (i - (numRows / 2.f)) * spacing, 0.f);
 
             glm::mat4 transform = glm::mat4(1.f);
             transform = glm::translate(transform, position);
             transform = glm::rotate(transform, glm::radians(rotation), glm::vec3(1.f, 0.f, 0.f));
-            transform = glm::rotate(transform, glm::radians(0.f), glm::vec3(0.f, 1.f, 0.f));
-            transform = glm::rotate(transform, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
-            transform = glm::scale(transform, glm::vec3(1.f));
-            RendererDrawMesh(sphereMesh, transform, state.materials[2]);
+            transform = glm::rotate(transform, glm::radians(rotation), glm::vec3(0.f, 1.f, 0.f));
+            RendererDrawMesh(*mesh, transform, state.materials[2]);
         }
     }
 

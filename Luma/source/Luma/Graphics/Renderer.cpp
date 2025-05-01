@@ -292,12 +292,7 @@ namespace Luma
             CreateShaderUniformMVP(state.shaders[RENDERER_SHADER_PBR]);
             CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "normalMatrix");
             CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "viewWorldPosition");
-            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "albedo");
-            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "metallic");
-            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "roughness");
-            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "albedoTexture");
-            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "metallicTexture");
-            CreateShaderUniform(state.shaders[RENDERER_SHADER_PBR], "roughnessTexture");
+            CreateShaderUniformMaterial(state.shaders[RENDERER_SHADER_PBR]);
             CreateShaderUniformLight(state.shaders[RENDERER_SHADER_PBR], SHADER_UNIFORM_DIRECTIONAL);
 
             state.shaders[RENDERER_SHADER_POST_PROCESSING] = LoadShader("assets/shaders/Framebuffer_vs.glsl",

@@ -112,6 +112,16 @@ namespace Luma
             CreateShaderUniform(shader, "projectionMatrix");
         }
 
+        void CreateShaderUniformMaterial(Shader& shader)
+        {
+            CreateShaderUniform(shader, "albedo");
+            CreateShaderUniform(shader, "metallic");
+            CreateShaderUniform(shader, "roughness");
+            CreateShaderUniform(shader, "albedoTexture");
+            CreateShaderUniform(shader, "metallicTexture");
+            CreateShaderUniform(shader, "roughnessTexture");
+        }
+
         void CreateShaderUniformLight(Shader& shader, ShaderUniformLightType type)
         {
             switch (type)

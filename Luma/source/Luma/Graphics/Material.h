@@ -11,7 +11,7 @@ namespace Luma
         {
             glm::vec3 albedo = glm::vec3(1.f);
             float metallic = 0.f;
-            float roughness = 0.f;
+            float roughness = 1.f;
             Texture* albedoTexture = NULL;
             Texture* metallicTexture = NULL;
             Texture* roughnessTexture = NULL;

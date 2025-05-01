@@ -45,6 +45,7 @@ namespace Luma
 
         void CreateShaderUniform(Shader& shader, const char* name);
         void CreateShaderUniformMVP(Shader& shader);
+        void CreateShaderUniformMaterial(Shader& shader);
         void CreateShaderUniformLight(Shader& shader, ShaderUniformLightType type);
         void SetShaderUniform(Shader& shader, const char* name, void* data, ShaderUniformType uniformType);
     }
