@@ -13,6 +13,7 @@ namespace Luma
             float metallic = 0.f;
             float roughness = 1.f;
             Texture* albedoTexture = NULL;
+            Texture* normalTexture = NULL;
             Texture* metallicTexture = NULL;
             Texture* roughnessTexture = NULL;
             Shader* shader = NULL;

@@ -118,6 +118,7 @@ namespace Luma
             CreateShaderUniform(shader, "metallic");
             CreateShaderUniform(shader, "roughness");
             CreateShaderUniform(shader, "albedoTexture");
+            CreateShaderUniform(shader, "normalTexture");
             CreateShaderUniform(shader, "metallicTexture");
             CreateShaderUniform(shader, "roughnessTexture");
         }

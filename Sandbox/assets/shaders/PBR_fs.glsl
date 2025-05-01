@@ -25,12 +25,14 @@ uniform float metallic;
 uniform float roughness;
 
 uniform sampler2D albedoTexture;
+uniform sampler2D normalTexture;
 uniform sampler2D metallicTexture;
 uniform sampler2D roughnessTexture;
 
 uniform DirectionalLight sun;
 
 vec3 GetObjectColor();
+vec3 GetNormalVector();
 float GetMetallicValue();
 float GetRoughnessValue();
 float DistributionGGX(vec3 N, vec3 H, float roughness);
@@ -40,7 +42,7 @@ vec3 FresnelSchlick(float cosTheta, vec3 F0);
 
 void main()
 {
-    vec3 N = normalize(data.normal);
+    vec3 N = GetNormalVector();
     vec3 V = normalize(viewWorldPosition - data.worldPosition);
     vec3 L = normalize(-sun.direction);
     vec3 H = normalize(V + L);
@@ -83,6 +85,30 @@ vec3 GetObjectColor()
     {
         vec3 texel = texture(albedoTexture, data.texCoord).xyz;
         result *= texel;
+    }
+
+    return result;
+}
+
+vec3 GetNormalVector()
+{
+    vec3 result = normalize(data.normal);
+
+    if (textureSize(normalTexture, 0).x > 1)
+    {
+        vec3 tangentNormal = texture(normalTexture, data.texCoord).xyz * 2.0 - 1.0;
+
+        vec3 Q1  = dFdx(data.worldPosition);
+        vec3 Q2  = dFdy(data.worldPosition);
+        vec2 st1 = dFdx(data.texCoord);
+        vec2 st2 = dFdy(data.texCoord);
+
+        vec3 N   = normalize(data.normal);
+        vec3 T  = normalize(Q1 * st2.t - Q2 * st1.t);
+        vec3 B  = -normalize(cross(N, T));
+        mat3 TBN = mat3(T, B, N);
+
+        result = normalize(TBN * tangentNormal);
     }
 
     return result;

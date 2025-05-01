@@ -110,8 +110,9 @@ void SetupFramebuffers()
 void SetupTextures()
 {
     state.textures[0] = LoadTexture("assets/textures/rusty_iron/albedo.png");
-    state.textures[1] = LoadTexture("assets/textures/rusty_iron/metallic.png");
-    state.textures[2] = LoadTexture("assets/textures/rusty_iron/roughness.png");
+    state.textures[1] = LoadTexture("assets/textures/rusty_iron/normal.png");
+    state.textures[2] = LoadTexture("assets/textures/rusty_iron/metallic.png");
+    state.textures[3] = LoadTexture("assets/textures/rusty_iron/roughness.png");
 }
 
 void SetupCamera()
@@ -153,8 +154,9 @@ void SetupMaterials()
     state.materials[2] = LoadMaterialDefault();
     state.materials[2].albedo = Colors::SoftWhite;
     state.materials[2].albedoTexture = &state.textures[0];
-    state.materials[2].metallicTexture = &state.textures[1];
-    state.materials[2].roughnessTexture = &state.textures[2];
+    state.materials[2].normalTexture = &state.textures[1];
+    state.materials[2].metallicTexture = &state.textures[2];
+    state.materials[2].roughnessTexture = &state.textures[3];
     state.materials[2].shader = state.pbrShader;
 
     state.framebufferMaterial = LoadMaterialDefault();
@@ -167,8 +169,8 @@ void RenderScene()
     Mesh& cubeMesh = GetMeshCube();
     Mesh& sphereMesh = GetMeshSphere();
 
-    const u32 numRows = 5;
-    const u32 numCols = 5;
+    const u32 numRows = 10;
+    const u32 numCols = 10;
     const float spacing = 2.f;
 
     static Mesh* mesh = &sphereMesh;
@@ -183,10 +185,7 @@ void RenderScene()
     {
         for (u32 j = 0; j < numCols; j++)
         {
-            mesh = &sphereMesh;
-
-            if (j % 2 == 0)
-                mesh = &cubeMesh;
+            mesh = (j % 2 == 0) ? &cubeMesh : &sphereMesh;
 
             glm::vec3 position = glm::vec3((j - (numCols / 2.f)) * spacing, (i - (numRows / 2.f)) * spacing, 0.f);
 

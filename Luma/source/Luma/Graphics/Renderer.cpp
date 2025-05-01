@@ -142,8 +142,9 @@ namespace Luma
         {
             Core::ApplicationConfig& appInfo = Core::GetApplicationInfo();
             const u32 albedoTextureSlot = 0;
-            const u32 metallicTextureSlot = 1;
-            const u32 roughnessTextureSlot = 2;
+            const u32 normalTextureSlot = 1;
+            const u32 metallicTextureSlot = 2;
+            const u32 roughnessTextureSlot = 3;
 
             if (material.shader != NULL && GetPrimaryCamera() != NULL)
             {
@@ -157,21 +158,26 @@ namespace Luma
                 SetShaderUniform(*material.shader, "metallic", &material.metallic, SHADER_UNIFORM_FLOAT);
                 SetShaderUniform(*material.shader, "roughness", &material.roughness, SHADER_UNIFORM_FLOAT);
                 SetShaderUniform(*material.shader, "albedoTexture", (void*)&albedoTextureSlot, SHADER_UNIFORM_INT);
+                SetShaderUniform(*material.shader, "normalTexture", (void*)&normalTextureSlot, SHADER_UNIFORM_INT);
                 SetShaderUniform(*material.shader, "metallicTexture", (void*)&metallicTextureSlot, SHADER_UNIFORM_INT);
                 SetShaderUniform(*material.shader, "roughnessTexture", (void*)&roughnessTextureSlot, SHADER_UNIFORM_INT);
 
                 BindTexture((Texture){.id = 0}, 0);
                 BindTexture((Texture){.id = 0}, 1);
                 BindTexture((Texture){.id = 0}, 2);
+                BindTexture((Texture){.id = 0}, 3);
 
                 if (material.albedoTexture != NULL)
                     BindTexture(*material.albedoTexture, 0);
 
+                if (material.normalTexture != NULL)
+                    BindTexture(*material.normalTexture, 1);
+
                 if (material.metallicTexture != NULL)
-                    BindTexture(*material.metallicTexture, 1);
+                    BindTexture(*material.metallicTexture, 2);
 
                 if (material.roughnessTexture != NULL)
-                    BindTexture(*material.roughnessTexture, 2);
+                    BindTexture(*material.roughnessTexture, 3);
 
                 BindVertexArray(mesh.vertexArray);
                 BindIndexBuffer(mesh.indexBuffer);
