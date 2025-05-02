@@ -284,6 +284,7 @@ namespace Luma
             state.shaders[RENDERER_SHADER_NORMAL] = LoadShader("assets/shaders/Normal_vs.glsl", "assets/shaders/Normal_fs.glsl");
             CreateShaderUniformMVP(state.shaders[RENDERER_SHADER_NORMAL]);
             CreateShaderUniform(state.shaders[RENDERER_SHADER_NORMAL], "normalMatrix");
+            CreateShaderUniform(state.shaders[RENDERER_SHADER_NORMAL], "normalTexture");
 
             state.shaders[RENDERER_SHADER_PHONG] = LoadShader("assets/shaders/Phong_vs.glsl", "assets/shaders/Phong_fs.glsl");
             CreateShaderUniformMVP(state.shaders[RENDERER_SHADER_PHONG]);

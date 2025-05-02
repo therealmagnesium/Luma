@@ -127,7 +127,7 @@ void SetupCamera()
 
 void SetupLights()
 {
-    state.sun.direction = glm::vec3(-0.2f, -0.7f, -1.f);
+    state.sun.direction = glm::vec3(0.7f, -1.f, -0.8f);
     state.sun.intensity = 1.5f;
     state.sun.color = glm::vec3(0.9f, 0.8f, 0.7f);
 

@@ -1,6 +1,5 @@
 #pragma once
 #include "Luma/Core/Base.h"
-#include "Luma/Graphics/Material.h"
 #include "Luma/Graphics/RendererInternal.h"
 
 #include <vector>

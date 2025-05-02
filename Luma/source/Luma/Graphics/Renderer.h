@@ -1,6 +1,7 @@
 #pragma once
 #include "Luma/Graphics/Camera.h"
 #include "Luma/Graphics/Colors.h"
+#include "Luma/Graphics/Material.h"
 #include "Luma/Graphics/Mesh.h"
 #include "Luma/Graphics/Shader.h"
 #include "Luma/Graphics/Window.h"
@@ -48,10 +49,10 @@ namespace Luma
         void RendererClear(float r, float g, float b);
         void RendererDrawCube(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale, const Color& color);
         void RendererDrawSphere(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale, const Color& color);
-        void RendererDrawCubeWires(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale, const Color& color,
-                                   float lineWidth = 5.f);
-        void RendererDrawSphereWires(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale, const Color& color,
-                                     float lineWidth = 5.f);
+        void RendererDrawCubeWires(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale,
+                                   const Color& color, float lineWidth = 5.f);
+        void RendererDrawSphereWires(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale,
+                                     const Color& color, float lineWidth = 5.f);
         void RendererDrawMesh(Mesh& mesh, const glm::mat4& transform, Material& material);
 
         Shader& GetShaderDefault();
